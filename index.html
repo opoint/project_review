@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신한 SOL글로벌 수행 리뷰 - 최종본</title>
+    <!-- 필수 라이브러리 로드 (순서 엄수) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background-color: #f3f4f6; 
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* 1페이지: 날렵한 선 드로잉 애니메이션 (두께 1.8) */
+        @keyframes drawLineInfinite {
+            0% { stroke-dashoffset: 240; opacity: 0; }
+            10% { opacity: 1; }
+            50% { stroke-dashoffset: 0; opacity: 1; }
+            90% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0; }
+        }
+        .animate-draw-refined {
+            stroke-dasharray: 240;
+            stroke-dashoffset: 240;
+            animation: drawLineInfinite 4s ease-in-out infinite;
+        }
+
+        /* 9페이지: 하트 심장 박동 애니메이션 */
+        @keyframes heartBeatPulse {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+        .animate-heart-pulse {
+            animation: heartBeatPulse 1.2s ease-in-out infinite;
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        /* 부드러운 슬라이드 전환 효과 */
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); transition: all 500ms; }
+
+        /* 커스텀 툴팁 */
+        .recharts-default-tooltip {
+            border-radius: 12px !important;
+            border: none !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="w-full flex justify-center"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } = Recharts;
+
+        // 아이콘 컴포넌트 (Lucide 아이콘 대응)
+        const LucideIcon = ({ name, size = 24, className = "", strokeWidth = 2, isFill = false }) => {
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size, strokeWidth }} className={`${className} ${isFill ? 'fill-current' : ''}`}></i>;
+        };
+
+        const StatCard = ({ iconName, label, value, color }) => {
+            const themes = {
+                blue: "bg-blue-50 text-blue-600 border-blue-100",
+                green: "bg-green-50 text-green-600 border-green-100",
+                purple: "bg-purple-50 text-purple-600 border-purple-100"
+            };
+            return (
+                <div className={`p-6 rounded-3xl border ${themes[color]} flex flex-col items-center justify-center shadow-sm`}>
+                    <div className="mb-3 opacity-70"><LucideIcon name={iconName} size={20} /></div>
+                    <p className="text-[10px] uppercase tracking-widest font-black opacity-60 mb-1">{label}</p>
+                    <p className="text-2xl font-black">{value}</p>
+                </div>
+            );
+        };
+
+        const RetroItem = ({ text, color }) => {
+            const styles = {
+                green: "bg-green-50 border-green-100 text-green-800",
+                red: "bg-red-50 border-red-100 text-red-800"
+            };
+            return (
+                <div className={`p-4 rounded-2xl border ${styles[color]} text-[14px] font-bold shadow-sm flex items-center gap-4 transition-all hover:translate-x-1`}>
+                    <span className={`w-2 h-2 rounded-full ${color === 'green' ? 'bg-green-400' : 'bg-red-400'}`}></span>
+                    {text}
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+
+            const slides = [
+                // 1. 타이틀
+                {
+                    title: "신한 SOL글로벌 고도화 프로젝트",
+                    subtitle: "Project Performance Review",
+                    content: (
+                        <div className="flex flex-col items-center justify-center h-full text-center">
+                            <div className="p-5 mb-6 bg-slate-50 rounded-2xl text-slate-900 shadow-sm border border-slate-200">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" className="animate-draw-refined" />
+                                    <line x1="3" y1="9" x2="21" y2="9" className="animate-draw-refined" style={{ animationDelay: '0.3s' }} />
+                                    <line x1="9" y1="21" x2="9" y2="9" className="animate-draw-refined" style={{ animationDelay: '0.6s' }} />
+                                </svg>
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">신한 SOL글로벌 고도화 수행 리뷰</h1>
+                            <p className="text-lg text-gray-500 mb-12 font-medium">안정적인 수행 및 문제 해결 성과 리뷰</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left border-t pt-8 w-full max-w-2xl">
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><LucideIcon name="calendar" className="text-slate-600" /></div>
+                                    <div>
+                                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-black">수행 기간</p>
+                                        <p className="font-bold text-gray-700">2025.09.01 - 2026.03.13</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><LucideIcon name="users" className="text-slate-600" /></div>
+                                    <div>
+                                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-black">역할</p>
+                                        <p className="font-bold text-gray-700">퍼블리셔 PL</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                // 2. 개요
+                {
+                    title: "01. 프로젝트 개요",
+                    subtitle: "투입 배경 및 수행 역할",
+                    content: (
+                        <div className="space-y-8">
+                            <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-xl shadow-sm">
+                                <h4 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                                    <LucideIcon name="info" size={20} /> 투입 배경
+                                </h4>
+                                <ul className="space-y-3 text-gray-700 text-[15px]">
+                                    <li className="flex items-start gap-2">
+                                        <div className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></div>
+                                        <span>기존 담당자 이탈로 인한 중도 투입</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <div className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></div>
+                                        <span>기존 산출물 분석 및 인수인계 후 업무 전담 수행</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <StatCard iconName="file-text" label="총 산출물" value="500여 본" color="blue" />
+                                <StatCard iconName="settings" label="기술 지원" value="100%" color="green" />
+                                <StatCard iconName="alert-circle" label="미결 이슈" value="0건" color="purple" />
+                            </div>
+                        </div>
+                    )
+                },
+                // 3. 이슈 (1)
+                {
+                    title: "02. 주요 이슈 및 대응 (1) 일정 관련",
+                    subtitle: "납기 관리의 어려움 극복",
+                    content: (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                            <section className="bg-red-50 p-6 rounded-xl border border-red-100 shadow-sm flex flex-col">
+                                <h4 className="font-bold text-red-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="alert-circle" size={18} /> 문제 (Problem)</h4>
+                                <div className="space-y-3 text-[13px] text-red-900 leading-relaxed">
+                                    <p>• 과도한 일정 압박으로 납기 관리 어려움</p>
+                                    <p>• 20영업일 내 200여 페이지 납기 요구</p>
+                                    <p>• 1인 기준 하루 30페이지 산출 요구</p>
+                                    <p>• 미확정 초안으로 기획서 전달 지연 반복</p>
+                                </div>
+                            </section>
+                            <section className="flex flex-col gap-4">
+                                <div className="bg-green-50 p-6 rounded-xl border border-green-100 shadow-sm">
+                                    <h4 className="font-bold text-green-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="check-circle-2" size={18} /> 대응 (Response)</h4>
+                                    <p className="text-[13px] text-green-900 leading-relaxed font-medium">전체 일정 재조율을 통해 납기 준수</p>
+                                </div>
+                                <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200 shadow-sm flex-grow">
+                                    <h4 className="font-bold text-yellow-800 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="lightbulb" size={18} /> 개선 방향 (Improvement)</h4>
+                                    <ul className="space-y-3">
+                                        <li className="text-[13px] text-yellow-900 leading-relaxed font-medium">• 산출물 규모 기반 현실적 일정 수립 필요</li>
+                                        <li className="text-[13px] text-yellow-900 leading-relaxed font-medium">• 기획서 제공 시점·확정 여부 명확히 기록</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    )
+                },
+                // 4. 이슈 (2)
+                {
+                    title: "02. 주요 이슈 및 대응 (2) 업무 범위 확대",
+                    subtitle: "작업량 변동 대응",
+                    content: (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                            <section className="bg-red-50 p-6 rounded-xl border border-red-100 shadow-sm flex flex-col">
+                                <h4 className="font-bold text-red-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="alert-circle" size={18} /> 문제 (Problem)</h4>
+                                <div className="space-y-3 text-[13px] text-red-900 leading-relaxed">
+                                    <p>• 초기 예상 300~350본 → 최종 500여 본으로 확대</p>
+                                    <p>• 2차 작업량, 1차와 거의 동일 수준으로 증가</p>
+                                    <p>• 프로세스 분석 미흡으로 화면 아이디 누락 반복</p>
+                                </div>
+                            </section>
+                            <section className="flex flex-col gap-4">
+                                <div className="bg-green-50 p-6 rounded-xl border border-green-100 shadow-sm">
+                                    <h4 className="font-bold text-green-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="check-circle-2" size={18} /> 대응 (Response)</h4>
+                                    <p className="text-[13px] text-green-900 leading-relaxed font-medium">일정 재조율 및 우선순위 조정으로 납기 준수</p>
+                                </div>
+                                <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200 shadow-sm flex-grow">
+                                    <h4 className="font-bold text-yellow-800 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="lightbulb" size={18} /> 개선 방향 (Improvement)</h4>
+                                    <ul className="space-y-3">
+                                        <li className="text-[13px] text-yellow-900 leading-relaxed font-medium">• 착수 단계에서 화면 목록 사전 확정 필요</li>
+                                        <li className="text-[13px] text-yellow-900 leading-relaxed font-medium">• 범위 변경 시 일정·리소스 재협의 공식화</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    )
+                },
+                // 5. 이슈 (3)
+                {
+                    title: "02. 주요 이슈 및 대응 (3) 공통 기획 및 컴포넌트",
+                    subtitle: "효율적인 스펙 변경 대응",
+                    content: (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="bg-red-50 p-6 rounded-xl border border-red-100 shadow-sm">
+                                    <h4 className="font-bold text-red-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="alert-circle" size={18} /> 문제 (Problem)</h4>
+                                    <ul className="text-[13px] text-red-900 space-y-2 list-disc pl-4 leading-relaxed">
+                                        <li>공통 항목·컴포넌트 스펙의 반복적 변경</li>
+                                        <li>공통 1건 수정 시 30~60페이지 연쇄 수정</li>
+                                        <li>수정 → 원복 → 재수정 반복 케이스 다수 발생</li>
+                                        <li>스펙 변경이 연관 컴포넌트 전체 수정으로 이어짐</li>
+                                    </ul>
+                                </div>
+                                <div className="bg-green-50 p-6 rounded-xl border border-green-100 shadow-sm">
+                                    <h4 className="font-bold text-green-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="check-circle-2" size={18} /> 대응 (Response)</h4>
+                                    <ul className="text-[13px] text-green-900 space-y-3 list-disc pl-4 leading-relaxed font-medium">
+                                        <li>VSCode 정규식 검색·일괄 치환으로 대량 수정 효율화</li>
+                                        <li>클래스 구조·명명 규칙 일관성 유지</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200 shadow-sm">
+                                <h4 className="font-bold text-yellow-800 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="lightbulb" size={16} /> 개선 방향</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[13px] text-yellow-900 font-medium">
+                                    <div className="p-4 bg-white/50 rounded-xl border border-yellow-100">• 상태별(readonly/disabled 등) 케이스를 사전 일괄 정의</div>
+                                    <div className="p-4 bg-white/50 rounded-xl border border-yellow-100">• 착수 단계에 컴포넌트 설계 시간 반영 협의 필요</div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                // 6. 이슈 (4)
+                {
+                    title: "02. 주요 이슈 및 대응 (4) 디자인 관리",
+                    subtitle: "협업 프로세스 보완",
+                    content: (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                            <section className="bg-red-50 p-6 rounded-xl border border-red-100 shadow-sm flex flex-col">
+                                <h4 className="font-bold text-red-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="alert-circle" size={18} /> 문제 (Problem)</h4>
+                                <div className="space-y-3 text-[13px] text-red-900 leading-relaxed">
+                                    <p>• 시각적 수정을 사전 공유 없이 진행</p>
+                                    <p>• 디자인 변경 이력 관리 부재로 사항 파악 어려움</p>
+                                    <p>• 프로젝트 막바지에 결함으로 뒤늦게 인입</p>
+                                </div>
+                            </section>
+                            <section className="flex flex-col gap-4">
+                                <div className="bg-green-50 p-6 rounded-xl border border-green-100 shadow-sm">
+                                    <h4 className="font-bold text-green-700 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="check-circle-2" size={18} /> 대응 (Response)</h4>
+                                    <p className="text-[13px] text-green-900 leading-relaxed font-medium">결함 접수 후 즉시 수정 처리</p>
+                                </div>
+                                <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200 shadow-sm flex-grow">
+                                    <h4 className="font-bold text-yellow-800 flex items-center gap-2 mb-4 text-[15px]"><LucideIcon name="lightbulb" size={18} /> 개선 방향</h4>
+                                    <ul className="space-y-3 text-[13px] text-yellow-900 font-medium">
+                                        <li>• 디자인 수정 시 메신저·이메일 즉시 공유 규칙 합의</li>
+                                        <li>• 정기 싱크 미팅을 통해 변경 사항 주기적 확인</li>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    )
+                },
+                // 7. 결과
+                {
+                    title: "03. 기술 지원 및 결과",
+                    subtitle: "협업 성과 및 마무리",
+                    content: (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                            <div className="bg-indigo-50 p-8 rounded-2xl border border-indigo-100 flex flex-col h-full shadow-sm">
+                                <h4 className="font-bold text-indigo-900 text-lg mb-6 flex items-center gap-2"><LucideIcon name="code-2" className="text-indigo-600" /> 기술 지원</h4>
+                                <div className="flex-grow space-y-4">
+                                    <p className="text-[15px] font-bold text-indigo-700 border-b border-indigo-200 pb-2">✓ JavaScript 기반 개발자 협업 지원</p>
+                                    <ul className="space-y-4 text-[14px] text-indigo-800">
+                                        <li>• 개발자 문제 해결 요청 <b>전건 대응</b> 완료</li>
+                                        <li>• 개발 경력 기반의 빠른 원인 파악 및 해결</li>
+                                        <li className="flex items-center gap-2 pt-4 border-t border-indigo-200 mt-2">
+                                            <span className="px-2 py-0.5 bg-indigo-600 text-white rounded text-[10px] font-bold">성과</span>
+                                            <b className="text-indigo-900">미해결 건수 0건 (100% 해결)</b>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm">
+                                <h4 className="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2"><LucideIcon name="clipboard-check" className="text-slate-500" /> 결과 및 마무리</h4>
+                                <div className="space-y-6 text-[14px] text-slate-600 leading-relaxed font-medium">
+                                    <p><b>어려운 조건 속에서도</b> 프로젝트를 정상적으로 마무리하며, PL로서 전 영역에 걸친 역할을 수행함.</p>
+                                    <div className="grid grid-cols-1 gap-3 mt-4 font-bold text-slate-700">
+                                        <div className="p-4 bg-white rounded-xl border border-slate-200 text-xs flex items-center gap-3"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div> 일정 조율 및 납기 관리</div>
+                                        <div className="p-4 bg-white rounded-xl border border-slate-200 text-xs flex items-center gap-3"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div> 기술 지원 및 협업 효율 향상</div>
+                                        <div className="p-4 bg-white rounded-xl border border-slate-200 text-xs flex items-center gap-3"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div> 컴포넌트 품질 관리</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                // 8. 회고
+                {
+                    title: "05. 프로젝트 회고",
+                    subtitle: "Retrospective",
+                    content: (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                            <section>
+                                <h4 className="font-bold text-green-700 mb-6 flex items-center gap-2"><div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-xs font-bold">✓</div> 잘된 점</h4>
+                                <div className="space-y-3">
+                                    <RetroItem text="기존 산출물 빠른 파악 및 업무 적응" color="green" />
+                                    <RetroItem text="일정 재협의를 통해 납기 준수" color="green" />
+                                    <RetroItem text="개발자 협업 요청 전건 해결" color="green" />
+                                    <RetroItem text="VSCode 정규식 활용으로 대량 수정 효율화" color="green" />
+                                    <RetroItem text="수정 이력 관리를 통한 품질 유지" color="green" />
+                                </div>
+                            </section>
+                            <section>
+                                <h4 className="font-bold text-red-700 mb-6 flex items-center gap-2"><div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-xs font-bold">!</div> 아쉬운 점</h4>
+                                <div className="space-y-3">
+                                    <RetroItem text="초기 변형 케이스 협의 부족" color="red" />
+                                    <RetroItem text="확정 후 반복된 스펙 변경" color="red" />
+                                    <RetroItem text="디자인 공유 프로세스 부재" color="red" />
+                                </div>
+                            </section>
+                        </div>
+                    )
+                },
+                // 9. 엔딩
+                {
+                    title: "",
+                    subtitle: "End of Presentation",
+                    content: (
+                        <div className="flex flex-col items-center justify-center h-full text-center">
+                            <div className="w-32 h-32 bg-red-50 rounded-full text-red-400 mb-10 border border-red-100 shadow-sm flex items-center justify-center">
+                                <span className="animate-heart-pulse">
+                                    <LucideIcon name="heart" size={64} isFill={true} />
+                                </span>
+                            </div>
+                            <h1 className="text-6xl font-black text-slate-800 mb-10 tracking-tighter">감사합니다</h1>
+                            <div className="mt-8 pt-10 border-t w-full max-w-sm flex flex-col gap-2">
+                                <p className="text-sm font-bold text-slate-700 tracking-wide">신한 SOL글로벌 고도화 프로젝트 수행 리뷰</p>
+                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Publisher Project Performance Review</p>
+                            </div>
+                        </div>
+                    )
+                }
+            ];
+
+            const next = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+            const prev = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+            return (
+                <div className="w-full max-w-5xl bg-white rounded-[2.5rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col min-h-[740px] border border-slate-100 relative">
+                    {/* Header */}
+                    <div className="bg-white/80 backdrop-blur-md border-b p-8 flex justify-between items-center shrink-0">
+                        <div className={slides[currentSlide].title === "" ? "opacity-0" : "opacity-100 transition-opacity"}>
+                            <h3 className="font-black text-xl text-slate-800 tracking-tight">{slides[currentSlide].title}</h3>
+                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-1">{slides[currentSlide].subtitle}</p>
+                        </div>
+                        <div className="flex gap-4">
+                            <button onClick={prev} className="p-3 bg-white border border-slate-100 hover:bg-slate-50 rounded-2xl transition-all shadow-sm text-slate-500">
+                                <LucideIcon name="chevron-left" size={22} />
+                            </button>
+                            <div className="flex items-center text-sm font-black bg-slate-50 px-6 rounded-2xl border border-slate-100 shadow-inner">
+                                {currentSlide + 1} <span className="mx-2 text-slate-300">/</span> {slides.length}
+                            </div>
+                            <button onClick={next} className="p-3 bg-slate-800 text-white hover:bg-slate-900 rounded-2xl transition-all shadow-md">
+                                <LucideIcon name="chevron-right" size={22} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-grow p-10 md:p-16 overflow-y-auto">
+                        <div className="h-full">
+                            {slides[currentSlide].content}
+                        </div>
+                    </div>
+
+                    {/* Progress */}
+                    <div className="w-full h-1.5 bg-slate-100 flex">
+                        {slides.map((_, idx) => (
+                            <div key={idx} className={`flex-grow h-full transition-all duration-700 ${idx <= currentSlide ? 'bg-slate-800' : 'bg-transparent'}`} />
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
