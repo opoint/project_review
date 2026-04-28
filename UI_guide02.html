@@ -61,9 +61,16 @@ body.toc-open {
 .toc-panel {
   position: sticky;
   top: 28px;
+  height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
 }
 
 .toc-panel__card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   padding: 16px;
   border-radius: 18px;
   border: 1px solid rgba(15, 23, 42, 0.1);
@@ -84,6 +91,9 @@ body.toc-open {
 .toc-nav {
   display: grid;
   gap: 4px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .toc-link {
@@ -486,8 +496,6 @@ body.toc-open {
 <a class="toc-link toc-link--sub" href="#3-1-애니메이션과-인터랙션-ux">3-1. 애니메이션과 인터랙션 UX</a>
 <a class="toc-link toc-link--sub" href="#3-2-입력-폼과-멀티스텝-ux">3-2. 입력 폼과 멀티스텝 UX</a>
 <a class="toc-link toc-link--sub" href="#3-3-탭-컴포넌트의-구조적-문제">3-3. 탭 컴포넌트의 구조적 문제</a>
-<a class="toc-link toc-link--sub" href="#3-4-모바일에서-position-fixed-엘리먼트의-문제">3-4. 모바일에서 position: fixed 엘리먼트의 문제</a>
-<a class="toc-link toc-link--sub" href="#3-5-토스트-팝업">3-5. 토스트 팝업</a>
 </nav>
           </div>
         </aside>
@@ -620,6 +628,7 @@ body.toc-open {
 <p>한편 아래처럼 두 클래스를 하나의 태그에 함께 쓰는 경우도 있습니다.</p>
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card__footer banner&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </code></pre><p>이 표현은 해당 태그가 <code>card</code>의 자식이면서 동시에 <code>banner</code> 컴포넌트임을 의미합니다. 구조를 간결하게 표현할 수 있다는 장점이 있지만, <code>card__footer</code>와 <code>.banner</code>의 CSS 프로퍼티가 같은 태그에 적용되면서 스타일 충돌이 발생할 수 있습니다. 가급적 지양하고, 컴포넌트는 별도의 태그로 분리하는 것을 권장합니다.</p>
+<hr>
 <h3 id="2-2-css-구조">2-2. CSS 구조</h3>
 <p>CSS도 같은 원칙을 따릅니다. 각 컴포넌트는 자신의 Block 이름을 기준으로 스타일을 완전히 독립적으로 가집니다.</p>
 <pre><code class="hljs language-css"><span class="hljs-comment">/* card 컴포넌트 */</span>
@@ -639,6 +648,7 @@ body.toc-open {
 <span class="hljs-comment">/* ❌ card가 banner 내부를 침범 */</span>
 <span class="hljs-selector-class">.card__footer</span> <span class="hljs-selector-class">.banner</span> { <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">8px</span>; }
 </code></pre><p>이렇게 컴포넌트 경계를 CSS에서도 지키면, <code>banner</code>를 다른 곳에 가져다 써도 스타일이 깨지지 않습니다.</p>
+<hr>
 <h3 id="2-3-액자식-구성">2-3. 액자식 구성</h3>
 <p>이 구조는 반대로도 성립합니다. 아래는 <code>card</code> 안에 <code>banner</code>가 들어오고, 그 <code>banner__body</code> 안에 다시 <code>card</code>가 들어오는 구조입니다.</p>
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card&quot;</span>&gt;</span>
@@ -669,7 +679,8 @@ body.toc-open {
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card__title&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>  <span class="hljs-comment">&lt;!-- ❌ card 없이 단독 사용 불가 --&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
-</code></pre><h3 id="2-5-상위-컴포넌트의-종속-요소가-하위-컴포넌트-안에-들어가는-경우">2-5. 상위 컴포넌트의 종속 요소가 하위 컴포넌트 안에 들어가는 경우</h3>
+</code></pre><hr>
+<h3 id="2-5-상위-컴포넌트의-종속-요소가-하위-컴포넌트-안에-들어가는-경우">2-5. 상위 컴포넌트의 종속 요소가 하위 컴포넌트 안에 들어가는 경우</h3>
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card__footer&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;banner&quot;</span>&gt;</span>
@@ -759,7 +770,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 <p>📎 <strong>NN/G(Nielsen Norman Group)</strong> 는 Jakob Nielsen과 Don Norman이 설립한 UX 리서치 전문 기관입니다. 실제 사용자 테스트를 기반으로 한 연구로 업계에서 신뢰도 높은 출처로 인정받고 있습니다.</p>
 </blockquote>
 <p>아래 내용은 이 관점에서 실무에서 마주치는 구체적인 문제들을 다룹니다.</p>
-<hr>
 <h4 id="뷰포트-밖-css-애니메이션은-멈추지-않는다">뷰포트 밖 CSS 애니메이션은 멈추지 않는다</h4>
 <p>CSS 애니메이션은 뷰포트 밖에 있어도 브라우저가 자동으로 멈추지 않습니다. 사용자가 보지 않는 영역에서도 애니메이션이 계속 실행되고 있습니다. 스크롤을 내렸다 올라왔을 때 애니메이션이 이미 끝나있거나 중간 상태인 경우가 이 때문입니다. 제어가 필요하다면 IntersectionObserver로 직접 처리해야 합니다.</p>
 <pre><code class="hljs language-js"><span class="hljs-keyword">const</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function">(<span class="hljs-params">entries</span>) =&gt;</span> {
@@ -771,7 +781,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 <p>같은 맥락에서 이미지 Lazy Loading도 생각해볼 필요가 있습니다. 이미지는 기본적으로 페이지 로드 시 뷰포트 밖에 있는 것까지 전부 불러옵니다. <code>loading=&quot;lazy&quot;</code> 속성을 사용하면 뷰포트에 진입할 때까지 로딩을 미룰 수 있습니다.</p>
 <pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;photo.jpg&quot;</span> <span class="hljs-attr">loading</span>=<span class="hljs-string">&quot;lazy&quot;</span>&gt;</span>
 </code></pre><p>⚠️ 위 두 방법 모두 성능 최적화나 훌륭한 제어 방법처럼 보이지만, UX 관점에서는 다시 생각해볼 필요가 있습니다. 사용자가 빠르게 스크롤하면 이미지가 채 로딩되기도 전에 지나쳐버립니다. 콘텐츠가 있어도 제때 보지 못하는 것은 정보 제공이 늦은 것과 다르지 않습니다. 애니메이션도 마찬가지로 스크롤 진입 시점에 시작되면 콘텐츠가 뒤늦게 나타나는 느낌을 줍니다.</p>
-<hr>
 <h4 id="display-none-과-css-애니메이션">display: none 과 CSS 애니메이션</h4>
 <p><code>display: none</code> 상태의 요소는 렌더 트리에서 완전히 제외됩니다. 렌더 트리는 실제로 화면에 그려지는 요소들로만 구성되기 때문에, <code>display: none</code>인 요소는 브라우저 입장에서 존재하지 않는 것과 같습니다. 따라서 CSS 애니메이션이 걸려 있어도 실행되지 않으며, <code>display: block</code>으로 전환되는 순간 애니메이션이 처음부터 시작됩니다.</p>
 <pre><code class="hljs language-css"><span class="hljs-comment">/* display: none 상태에서는 애니메이션이 진행되지 않음 */</span>
@@ -780,7 +789,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 </code></pre><p>⚠️ 탭이나 토글로 show/hide 되는 영역 안에 애니메이션 요소가 있을 때 사용자마다 경험이 달라집니다. 탭 A가 활성화 상태일 때 애니메이션 요소가 화면 하단에 있어 못 봤다면, 탭 B를 거쳐 탭 A로 돌아오는 순간 <code>display: none</code>이 해제되며 애니메이션이 처음부터 재시작됩니다. 같은 컴포넌트인데 어떤 사용자는 보고 어떤 사용자는 못 보는 경험의 불일치가 생깁니다.</p>
 <p>빠르게 탭을 반복 전환하면 애니메이션이 완료되지 않은 채 쌓여 동작 자체가 꼬이는 기술적 문제도 발생합니다.</p>
 <p>탭이나 토글 등으로 숨겨지는 영역 안에는 애니메이션을 넣지 않는 것을 권장합니다.</p>
-<hr>
 <h4 id="스크롤-중-애니메이션-트리거의-문제">스크롤 중 애니메이션 트리거의 문제</h4>
 <p>사용자는 콘텐츠가 늦게 뜨는 이유를 구분하지 않습니다. 서버가 느린 것이든, 애니메이션 때문인 것이든 결과는 같습니다. &quot;이 사이트 느리다&quot;는 인상만 남습니다. 스크롤 진입 시 애니메이션을 트리거하는 방식은 실무에서 자주 쓰이지만 아래와 같은 문제가 있습니다.</p>
 <ul>
@@ -792,7 +800,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 <p>📎 <strong>배너 맹목성(Banner Blindness)</strong> 은 1998년 Benway &amp; Lane의 연구에서 처음 제시된 개념으로, 사용자가 광고처럼 보이는 요소를 무의식적으로 무시하게 되는 현상입니다. 반복적인 움직임과 시각적 노이즈에도 동일하게 적용됩니다.</p>
 </blockquote>
 <p>특히 금융 서비스처럼 목적이 명확한 사용자일수록 이 문제는 더 두드러집니다. NN/G는 의료, 금융 같은 고관여 서비스의 사용자는 &quot;멋진 디자인에 감동받고 싶은 게 아니라 답을 빨리 얻고 싶은&quot; 사람들이라고 설명합니다. 이런 환경에서 뚜렷한 목적성 없는 과도한 애니메이션 사용은 브랜드 인상이 아니라 불편함으로 작용할 가능성이 높습니다.</p>
-<hr>
 <h4 id="애니메이션과-접근성">애니메이션과 접근성</h4>
 <p>애니메이션을 과도하게 사용하면 단순히 UX가 나빠지는 것을 넘어 일부 사용자에게 실제 신체적 불편함이나 위험을 줄 수 있습니다.</p>
 <p><strong>움직임 민감성</strong> — 전정계 장애나 어지럼증이 있는 사용자에게 과도한 모션은 메스꺼움과 현기증을 유발합니다. 40세 이상 성인의 약 35%가 움직임 민감성을 가지고 있습니다. OS의 &quot;움직임 줄이기&quot; 설정을 켠 사용자에게는 <code>prefers-reduced-motion</code>으로 대응할 수 있습니다.</p>
@@ -813,7 +820,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 <blockquote>
 <p>📎 <strong>포켓몬 쇼크(1997)</strong> — 1997년 12월 일본에서 포켓몬스터 애니메이션 38화 방영 중 피카츄의 전기 공격 장면에서 빨간색과 파란색이 빠르게 점멸하는 화면 효과로 인해 시청하던 아동 750명이 광과민성 발작을 일으킨 사건입니다. 기네스북에 &quot;가장 많은 사람들에게 발작을 일으킨 TV 프로그램&quot;으로 등재됐으며, 이 사건이 WCAG의 점멸 콘텐츠 금지 기준이 마련되는 계기 중 하나가 됐습니다.</p>
 </blockquote>
-<hr>
 <h4 id="애니메이션은-above-the-fold에서-가장-효과적이다">애니메이션은 Above the Fold에서 가장 효과적이다</h4>
 <p>NN/G 연구에서 웹 사용자는 페이지 체류 시간의 80%를 Above the Fold, 즉 최초 진입 시 보이는 영역에서 보냅니다. 애니메이션이 가장 효과적으로 동작하는 구간도 여기입니다.</p>
 <ul>
@@ -906,56 +912,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 <li>탭이 없어도 되는 상황인가? 탭은 공간을 아끼기 위한 도구입니다. 공간이 충분하다면 굳이 쓸 필요가 없습니다.</li>
 </ul>
 <hr>
-<h3 id="3-4-모바일에서-position-fixed-엘리먼트의-문제">3-4. 모바일에서 position: fixed 엘리먼트의 문제</h3>
-<p><code>position: fixed</code>는 뷰포트를 기준으로 요소를 고정하는 CSS 속성입니다.</p>
-<p>iOS Safari는 iOS 8.2(2015년)부터 키패드가 올라와도 Layout Viewport를 리사이즈하지 않는 방식을 사용해왔습니다. Android Chrome은 Chrome 108(2022년) 이전까지 키패드가 올라오면 Layout Viewport 자체가 줄어드는 방식을 사용했습니다. 이 차이 때문에 Android에서는 <code>bottom: 0</code> fixed 버튼이 키패드 위로 자동으로 올라왔고, iOS에서는 키패드 아래에 숨어버리는 차이가 있었습니다.</p>
-<p>그러다 Chrome 108(2022년)부터 Android Chrome도 iOS Safari와 동일한 방식으로 변경되면서 fixed 요소가 키패드 아래로 숨는 동작이 같아졌습니다.</p>
-<p>문제는 그 이후입니다. iOS Safari는 포커스된 입력 필드가 화면에 보이도록 Layout Viewport 자체를 위로 오프셋시킵니다. 키패드가 올라온 상태에서 스크롤하면 이 오프셋된 Layout Viewport 전체가 함께 이동하면서 <code>position: fixed</code> 요소가 static처럼 스크롤을 따라 움직여버립니다. 이 동작은 iOS Safari에서만 발생하며 Android에서는 보고된 바 없습니다.</p>
-<p>종종 이런 요청이 들어옵니다. &quot;키패드가 올라온 상태에서 바로 확인/등록 버튼을 누를 수 있게 해달라&quot;는 것입니다. Android 구버전에서는 가능했기 때문에 당연한 요청처럼 느껴집니다. 그러나 iOS, Android 구버전, Android 신버전은 각각 OS 차원의 렌더링 방식이 달라 키패드와 fixed 요소의 관계를 코드만으로 동일하게 일체화하는 것은 불가능합니다.</p>
-<h4 id="키패드-감지-문제">키패드 감지 문제</h4>
-<p>키패드 show/hide를 명시적으로 알려주는 이벤트가 브라우저에 있었다면 이 모든 문제는 훨씬 단순해졌을 겁니다. 그러나 그런 이벤트는 표준에 존재하지 않습니다.</p>
-<p>iOS 8.2(2015년)부터 Apple이 키패드가 올라올 때 Layout Viewport를 리사이즈하지 않도록 의도적으로 변경하면서 키패드 올라옴 자체를 CSS도 JS도 감지할 수 없게 됐습니다. resize 이벤트도, scroll 이벤트도, blur도 아무것도 발생하지 않았습니다.</p>
-<p>iOS 13(2019년)부터 Visual Viewport API가 정식 지원되면서 비로소 감지가 가능해졌습니다. <code>window.visualViewport</code>의 resize 이벤트로 키패드 올라옴을 감지할 수 있게 됐지만, 이후 일부 버전에서 이벤트가 불안정한 버그가 있었고, 무엇보다 감지 이후 스크롤 시 fixed가 해제되는 근본적인 문제는 여전히 해결되지 않습니다.</p>
-<h4 id="결론">결론</h4>
-<p>이 문제는 OS 차원의 렌더링 방식에서 비롯된 것으로, 코드만으로는 완전한 통제가 불가능합니다. 실무에서 쓰이는 대응 방식은 입력 필드에 포커스가 발생하면 fixed 요소를 숨기고, <code>visualViewport</code> resize 이벤트로 키패드가 내려간 것을 감지해 다시 보여주는 방식입니다. Visual Viewport API를 지원하지 않는 구버전 환경에서는 이마저도 동작하지 않습니다.</p>
-<p>근본적인 회피책은 설계 단계에서 이 상황 자체를 만들지 않는 것입니다.</p>
-<ul>
-<li><strong>fixed 요소 안에 입력 필드를 넣지 않는다</strong> — 가장 확실한 방법입니다. fixed 요소는 버튼이나 네비게이션만 담고, 입력 필드는 반드시 스크롤 영역 안에 배치합니다.</li>
-<li><strong>입력 화면의 제출 버튼을 <code>position: static</code>으로 배치한다</strong> — 같은 화면에 입력 필드와 제출 버튼이 공존해야 한다면, fixed 버튼 대신 스크롤 영역 안에 <code>position: static</code>으로 배치합니다. fixed가 아닌 버튼은 이 문제의 영향을 받지 않습니다.</li>
-</ul>
-<hr>
-<h3 id="3-5-토스트-팝업">3-5. 토스트 팝업</h3>
-<p>토스트는 사용자의 행동에 대한 즉각적인 피드백을 화면 구석에 잠깐 띄웠다 자동으로 사라지는 UI 패턴입니다. 직관적이고 간편해 보이지만 구조적으로 여러 문제를 안고 있습니다.</p>
-<h4 id="사용자-인지-문제">사용자 인지 문제</h4>
-<p>사람은 화면의 한 곳에 집중하면 다른 곳에서 일어나는 변화를 감지하지 못합니다. NN/G는 이를 변화 맹시(Change Blindness)라고 정의합니다. 토스트는 대개 작업 영역이 아닌 화면 구석에 뜨기 때문에 사용자가 폼을 입력하거나 버튼을 누르는 순간 구석에서 떴다 사라지는 토스트를 인지하지 못할 확률이 높습니다. NN/G 모바일 사용성 연구에서 실제로 한 사용자가 하단에 5초간 표시된 에러 토스트를 발견하지 못해 5분 동안 콘텐츠 로딩을 기다린 사례가 있었습니다.</p>
-<h4 id="시스템이-읽기-속도를-결정한다">시스템이 읽기 속도를 결정한다</h4>
-<p>토스트는 시스템이 임의로 정한 시간 후에 사라집니다. 난독증이 있거나, 고령이거나, 모국어가 아닌 언어로 읽는 사용자는 그 시간 안에 내용을 다 읽지 못할 수 있습니다. 접근성 전문가 Sheri Byrne-Haber는 사용자가 &quot;다 읽었다&quot;는 신호를 주지 않았는데 창을 닫아버리는 것은 정보에 대한 접근 권한을 일방적으로 박탈하는 행위라고 비판합니다.</p>
-<h4 id="접근성-문제">접근성 문제</h4>
-<p>WCAG 2.2.1은 타이머로 사라지는 콘텐츠에 대해 사용자가 시간을 조절하거나 연장할 수 있어야 한다고 규정합니다. 단, 토스트가 사라져도 다른 방법으로 같은 정보를 확인할 수 있다면 위반이 아닙니다. 스크린 리더 사용자에게는 또 다른 딜레마가 있습니다. 토스트가 뜰 때 스크린 리더가 읽어주면 현재 작업 흐름이 끊기고, 안 읽어주면 정보를 아예 놓치게 됩니다.</p>
-<p>접근성 전문가 Adrian Roselli가 토스트 또는 토스트와 유사한 알림 패턴을 구현한 수십 개의 라이브러리를 검토한 결과, WCAG 감사를 통과할 수 있는 라이브러리는 단 하나도 없었습니다. 토스트를 접근성 있게 만드는 것이 이론적으로는 가능하지만 실제로는 아무도 해내지 못한 셈입니다.</p>
-<p>이러한 이유로 IT 기업인 GitHub조차 Primer 디자인 시스템에서 토스트를 완전히 금지했습니다.</p>
-<p>접근성 전문가와 디자인 기관들이 제안하는 토스트 사용 조건들을 정리하면 이렇습니다.</p>
-<ul>
-<li><strong>Google Material Design</strong> — 중요한 정보는 담지 말 것</li>
-<li><strong>WCAG 2.2.1</strong> — 사용자가 시간을 조절하거나 연장할 수 있어야 할 것</li>
-<li><strong>WCAG 2.2.1</strong> — 토스트가 사라져도 다른 방법으로 같은 정보를 확인할 수 있어야 할 것</li>
-<li><strong>Sheri Byrne-Haber</strong> — 사용자가 다 읽었다는 신호를 주기 전까지 닫으면 안 될 것</li>
-</ul>
-<p>그런데 이 조건들을 그대로 따르면 이런 의문이 생깁니다.</p>
-<ul>
-<li>중요한 정보를 담지 말라면 — 중요한 정보가 아닌데 왜 사용자 시선을 방해해가면서까지 보여줘야 하나요?</li>
-<li>사라져도 다른 방법으로 확인할 수 있어야 한다면 — 그냥 그 방법으로만 보여주면 되지, 토스트는 왜 따로 띄우나요? 정보를 중복 제공하는 게 아닌가요?</li>
-<li>시간을 조절할 수 있어야 한다면 — 그건 이미 토스트가 아니라 다이얼로그입니다.</li>
-<li>사용자가 직접 닫아야 한다면 — 마찬가지로 다이얼로그입니다.</li>
-</ul>
-<p>각 전문가와 기관의 가이드라인을 따르다 보면 결국 토스트를 쓸 자리가 없어집니다.</p>
-<p><strong>토스트를 쓰기 전에 확인할 것들</strong></p>
-<ul>
-<li><del>이 피드백이 없으면 사용자가 결과를 알 수 없는가? 화면 상태 변화만으로 충분하다면 토스트는 불필요합니다.</del></li>
-<li><del>오류나 경고를 토스트로 전달하려 하는가? 오류는 반드시 인라인 또는 다이얼로그로 표시해야 합니다.</del></li>
-<li><del>토스트 안에 액션 버튼이 있는가? 버튼이 있는 토스트는 자동으로 닫으면 안 됩니다.</del></li>
-</ul>
-<p>결국 토스트가 제 역할을 하는 케이스는 하나입니다. 버튼이 눌렸다는 것을 화면 변화 없이 알려줘야 할 때. 그 외의 용도는 다른 UI 패턴으로 대체하는 것이 적합합니다.</p>
 
         </main>
       </div>
@@ -995,8 +951,6 @@ element.<span class="hljs-property">classList</span>.<span class="hljs-title fun
 <a class="toc-link toc-link--sub" href="#3-1-애니메이션과-인터랙션-ux">3-1. 애니메이션과 인터랙션 UX</a>
 <a class="toc-link toc-link--sub" href="#3-2-입력-폼과-멀티스텝-ux">3-2. 입력 폼과 멀티스텝 UX</a>
 <a class="toc-link toc-link--sub" href="#3-3-탭-컴포넌트의-구조적-문제">3-3. 탭 컴포넌트의 구조적 문제</a>
-<a class="toc-link toc-link--sub" href="#3-4-모바일에서-position-fixed-엘리먼트의-문제">3-4. 모바일에서 position: fixed 엘리먼트의 문제</a>
-<a class="toc-link toc-link--sub" href="#3-5-토스트-팝업">3-5. 토스트 팝업</a>
 </nav>
           </div>
         </aside>
