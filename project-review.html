@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>하나은행 퇴직연금 복기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Instrument+Serif:ital@1&display=swap">
+<style>
+/* Layout: 검정 바탕 위 크림 시트 · 좌측 스테이지(섹션 1장씩, 최대 높이 860px 세로 중앙) + 우측 목차 */
+:root{
+  --paper:#F2EDE4; --ink:#121212; --muted:#5F5952; --rule:rgba(18,18,18,.14); --ac:#F15A25; --ac-t:#B13A0B; --panel:rgba(18,18,18,.045);
+  --or:#F15A25; --bl:#2D46E0; --ye:#F5B027;
+  --bg:var(--paper); --fg:var(--ink);
+  --hatch:repeating-linear-gradient(135deg,rgba(18,18,18,.55) 0 2px,transparent 2px 7px);
+  --f-gro:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-kr:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--ink);color:var(--ink);font-family:var(--f-kr);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--or);outline-offset:4px}
+h1,h2,h3,p{margin:0}
+.mono{font-family:var(--f-mono)}
+.lbl{font-family:var(--f-mono);font-size:18px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.klbl{font-family:var(--f-kr);font-size:20px;font-weight:500;color:var(--muted)}
+
+/* chrome */
+#sheet{position:fixed;inset:28px;background:var(--bg);color:var(--fg);overflow:hidden}
+[data-t="ink"]{--bg:#2B2926;--fg:#F2EDE4;--muted:#A39C92;--rule:rgba(242,237,228,.18);--ac:#F15A25;--ac-t:#F4845F;--panel:rgba(242,237,228,.06)}
+[data-t="ye"]{--bg:#FFEB80;--fg:#121212;--muted:rgba(18,18,18,.72);--rule:rgba(18,18,18,.16);--ac:#121212;--ac-t:#9A3412}
+[data-t="bl"]{--bg:#BAC4F2;--fg:#121212;--muted:rgba(18,18,18,.72);--rule:rgba(18,18,18,.16);--ac:#2D46E0;--ac-t:#1E33B8;--panel:#F2EDE4}
+[data-t="or"]{--bg:#F15A25;--fg:#121212;--muted:rgba(18,18,18,.72);--rule:rgba(18,18,18,.24);--ac:#121212;--ac-t:#121212}
+.crop{position:fixed;width:14px;height:14px;z-index:30;pointer-events:none;border:0 solid var(--paper)}
+.crop.tl{left:12px;top:12px;border-left-width:1px;border-top-width:1px}
+.crop.tr{right:12px;top:12px;border-right-width:1px;border-top-width:1px}
+.crop.bl{left:12px;bottom:12px;border-left-width:1px;border-bottom-width:1px}
+.crop.br{right:12px;bottom:12px;border-right-width:1px;border-bottom-width:1px}
+.meta{position:fixed;z-index:30;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);opacity:.75;pointer-events:none}
+.meta.tl{left:46px;top:6px}.meta.tr{right:46px;top:6px}
+.meta.bl{left:46px;bottom:6px}.meta.br{right:46px;bottom:6px}
+.meta.bc{left:50%;bottom:6px;transform:translateX(-50%);font-variant-numeric:tabular-nums}
+#skip{position:absolute;right:36px;bottom:30px;z-index:30;font-family:var(--f-mono);font-size:18px;letter-spacing:.1em;color:var(--ac-t);opacity:0;transition:opacity .3s;pointer-events:none}
+#skip.on{opacity:1}
+
+/* toc */
+#toc{position:absolute;right:44px;top:50%;transform:translateY(-50%);width:280px;z-index:20;opacity:0;visibility:hidden}
+#toc .tt{font-family:var(--f-mono);font-size:18px;letter-spacing:.12em;color:var(--muted);padding:0 0 14px 28px}
+#toc .rail{position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--rule)}
+#dot{position:absolute;left:-6px;top:0;width:13px;height:13px;border-radius:999px;background:var(--ac)}
+#toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+#toc li button{display:grid;grid-template-columns:44px 1fr auto;align-items:baseline;width:100%;padding:7px 0 7px 28px;text-align:left;font-size:22px;transition:opacity .3s,color .3s}
+#toc li .n{font-family:var(--f-mono);font-size:18px;color:var(--muted)}
+#toc li .ar{font-family:var(--f-mono);font-size:19px;color:var(--ac-t);opacity:0}
+#toc li.lock button{opacity:.28;cursor:default}
+#toc li.nx .ar{opacity:1}
+#toc li.nx button{color:var(--ac-t)}
+#toc li.cur button{font-weight:700}
+
+/* stage */
+#stage{position:absolute;left:60px;right:340px;top:40px;bottom:90px}
+.sec{position:absolute;inset:0;margin:auto 0;max-height:860px;display:flex;flex-direction:column;gap:22px;visibility:hidden;background:var(--bg);color:var(--fg);z-index:1}
+.sec.on{visibility:visible}
+.sec > *:not(.kw):not(.wm):not(.burst){position:relative;z-index:1}
+.kw,.wm{font-family:var(--f-gro);font-weight:900;letter-spacing:-.045em;line-height:1;white-space:nowrap;pointer-events:none}
+.wm{position:absolute;right:-6px;bottom:-30px;z-index:0;font-size:220px;opacity:0}
+.kw em,.wm em{font-style:normal;color:var(--or)}
+
+/* G2·G3 풀필드 레이어: 시트 전체를 덮는 섹션별 필드 + 키워드 */
+#fx{position:absolute;inset:0;z-index:25;pointer-events:none;overflow:hidden}
+.fxs{position:absolute;inset:0;visibility:hidden}
+.fld{position:absolute;inset:0;background:var(--fc)}
+.gd{position:absolute;inset:0;width:100%;height:100%;opacity:0;color:var(--wc)}
+.gd circle,.gd line{fill:none;stroke:currentColor;stroke-width:1}
+/* r2: 단어별 크기(--kfs)는 fit()에서 측정해 지정. 가로·세로 가운데 */
+.fxs .kw{position:absolute;left:50%;top:50%;display:block;white-space:nowrap;font-size:var(--kfs,200px);color:var(--wc)}
+.kw .cp{position:absolute;inset:0;display:block;white-space:nowrap;visibility:hidden}
+.kw .rgb{z-index:-1}.kw .rgb .fxd{background:currentColor}
+.kw.roll{font-variant-numeric:tabular-nums}
+.kw.roll .kch{height:1em;overflow:hidden;vertical-align:top}
+.kw .ks{display:flex;flex-direction:column}.kw .ks i{display:block;height:1em;font-style:normal}
+.kw .ul{position:absolute;left:0;right:0;bottom:.06em;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left}
+.fxl{display:inline-block;white-space:nowrap}
+.fxd{display:inline-block;vertical-align:baseline;width:calc(var(--kfs) * .16);height:calc(var(--kfs) * .16);margin-left:calc(var(--kfs) * .03);border-radius:50%;background:var(--or);font-size:0;color:transparent;overflow:hidden}
+.fxs[data-f="or"] .fxd{background:var(--wc)}
+.cvx{position:absolute;inset:0;width:100%;height:100%}
+/* 00 프리롤 */
+.rays{position:absolute;left:50%;top:50%;width:84vh;height:84vh;margin:-42vh 0 0 -42vh;overflow:visible}
+.rays line{stroke:var(--or);stroke-width:1.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.pdot{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--or);transform:scale(0)}
+.psub{position:absolute;left:.04em;top:100%;margin-top:.1em;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;font-size:.3em;letter-spacing:0;line-height:1;white-space:nowrap;color:var(--ink);visibility:hidden}
+/* 02 별 버스트 */
+.stars{position:absolute;left:50%;top:50%;width:0;height:0}
+.stars > *{position:absolute;left:0;top:0}
+.bigstar{width:96vh;height:96vh;margin:-48vh 0 0 -48vh;overflow:visible}
+.bigstar polygon{fill:none;stroke:var(--paper);stroke-width:.5}
+.ring .st{position:absolute;left:-2.2vh;top:-2.2vh;width:4.4vh;height:4.4vh;background:var(--paper)}
+.ry{position:absolute;left:0;top:-3px;width:50vh;height:6px;background:var(--or);transform-origin:0 50%}
+/* 05 블롭 */
+.blob{position:absolute;left:50%;top:50%;width:46vh;height:46vh;margin:-23vh 0 0 -23vh;overflow:visible;visibility:hidden}
+.blob path{fill:var(--bl)}
+.hd{display:flex;align-items:baseline;gap:16px;padding-bottom:14px;border-bottom:1px solid var(--fg)}
+.hd .no{font-family:var(--f-mono);font-size:20px;color:var(--ac-t);font-weight:600}
+.hd h2{font-size:46px;font-weight:700;letter-spacing:-.02em}
+.hd .rt{margin-left:auto}
+.shp{display:inline-block;flex:none}
+.shp.c{border-radius:50%}
+.shp.h{border-radius:999px 999px 0 0}
+.shp.t{clip-path:polygon(50% 0,100% 100%,0 100%)}
+.shp.x{background:var(--hatch);outline:1.5px solid var(--ink);outline-offset:-1.5px}
+
+#nextWrap{position:absolute;left:60px;right:340px;bottom:24px;display:flex;justify-content:center;z-index:20;pointer-events:none}
+#next{pointer-events:auto;display:flex;align-items:center;gap:14px;padding:13px 26px;background:var(--fg);color:var(--bg);font-family:var(--f-mono);font-size:18px;letter-spacing:.06em;opacity:0;visibility:hidden}
+#next b{font-family:var(--f-kr);font-weight:700;letter-spacing:0;font-size:20px}
+
+/* 00 opening */
+.s0{justify-content:center;gap:0}
+.s0 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;padding-bottom:30px}
+.s0 h1{font-size:84px;font-weight:700;line-height:1.18;letter-spacing:-.03em;min-height:2.36em}
+.s0 h1 .pt{color:var(--ac-t)}
+.caret{display:inline-block;width:5px;height:.85em;margin-left:6px;vertical-align:-.06em;background:var(--or);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.comp{position:relative;width:210px;height:170px;flex:none}
+.comp i{position:absolute}
+.rule{height:2px;background:var(--fg);transform-origin:left}
+#pct{position:absolute;right:0;top:12px;font-family:var(--f-mono);font-size:20px}
+.metas{display:grid;grid-template-columns:repeat(4,1fr);padding-top:22px}
+.metas div{display:flex;flex-direction:column;gap:6px;padding-right:20px}
+.metas b{font-size:25px;font-weight:500}
+
+/* 01 overview */
+.ovl{display:flex;flex-direction:column}
+.ovr{position:relative;display:grid;grid-template-columns:180px 1fr;gap:20px;padding:10px 0;align-items:baseline}
+.ovr .rl{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rule);transform-origin:left}
+.ovr .v{font-size:28px;font-weight:500;min-width:0}
+.ovr:first-child .v{font-size:38px;font-weight:700;letter-spacing:-.02em}
+.mg{display:grid;grid-template-columns:repeat(23,18px);gap:5px;margin-top:14px}
+.mg i{width:18px;height:18px}
+.mg i.m{background:var(--or)}.mg i.w{background:var(--bl)}
+.leg{display:flex;gap:26px;margin-top:12px;font-family:var(--f-mono);font-size:18px}
+.leg span{display:flex;align-items:center;gap:8px}
+.leg i{width:12px;height:12px}
+
+/* 02 results */
+.prog{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:18px}
+.prog .bar{height:14px;background:var(--rule)}
+.prog .fill{display:block;height:100%;background:repeating-linear-gradient(45deg,rgba(255,255,255,.14) 0 1.5px,transparent 1.5px 5px) var(--ac);transform-origin:left}
+#pc2{font-family:var(--f-gro);font-weight:800;font-size:34px;min-width:4.2ch;text-align:right;line-height:1;font-variant-numeric:tabular-nums}
+/* 슬롯 롤 숫자 */
+.sc{display:inline-block;height:1em;overflow:hidden;vertical-align:top;text-align:center;line-height:1}
+.ss{display:flex;flex-direction:column}
+.ss i{display:block;height:1em;font-style:normal}
+.prog .ok{font-weight:700;color:var(--ac-t);font-size:22px}
+.cards{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1.25fr 1fr;border-top:1px solid var(--fg)}
+.card{position:relative;display:flex;flex-direction:column;gap:4px;padding:16px 20px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0}
+.card:nth-child(4),.card:nth-child(6){border-right:0}
+.card:nth-child(n+5){grid-column:span 2}
+.card .top{display:flex;justify-content:space-between;align-items:center}
+.card .nm{font-weight:700;font-size:23px}
+.card .shp{width:24px;height:24px}
+.num{font-family:var(--f-gro);font-weight:900;font-size:clamp(64px,6.2vw,100px);line-height:1;letter-spacing:-.03em;margin-top:auto;font-variant-numeric:tabular-nums}
+.num small{font-family:var(--f-kr);font-size:25px;font-weight:500;letter-spacing:0;margin-left:6px}
+.eq{font-family:var(--f-mono);font-size:18px;color:var(--muted)}
+.card .sub{color:var(--muted);font-size:18px}
+.card .txt{margin-top:auto;font-size:26px;font-weight:700;line-height:1.35}
+.sw{position:relative;height:1.5em;font-size:18px;color:var(--muted)}
+.sw span{position:absolute;left:0;top:0;white-space:nowrap}
+
+/* 03 history */
+.tlw{position:relative;padding-left:72px}
+.months{display:grid;grid-template-columns:repeat(6,1fr);font-family:var(--f-mono);font-size:18px;letter-spacing:.08em;color:var(--muted)}
+.months span{border-left:1px solid var(--rule);padding-left:8px}
+.lanes{position:relative;height:200px;margin:10px 0 30px}
+.lane-l{position:absolute;left:-72px;font-family:var(--f-mono);font-size:16px;color:var(--muted);line-height:44px}
+.blk{position:absolute;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden}
+.blk.pl{top:0;border:1.5px dashed var(--muted);color:var(--muted);font-weight:500}
+.blk.ac{top:62px;background:var(--ink);color:var(--paper)}
+.blk.ac.dl{background:var(--hatch);border:1.5px solid var(--ink);color:var(--ink)}
+.blk.ac.pb{background:var(--or)}
+.blk.ex{top:150px;background:var(--or);color:var(--ink)}
+.note{position:absolute;top:112px;font-family:var(--f-mono);font-size:16px;font-weight:600;white-space:nowrap}
+.note.d{color:var(--ink)}.note.p{color:var(--ac-t)}
+.endm{position:absolute;left:92%;top:-8px;bottom:0;border-left:1.5px dashed var(--ink)}
+.endm span{position:absolute;bottom:-26px;left:-60px;font-family:var(--f-mono);font-size:16px;white-space:nowrap}
+.lane-l svg{width:24px;height:24px;margin-left:4px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ldot{position:absolute;z-index:3;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--ink)}
+.ldot.pl{background:var(--muted)}.ldot.ex{background:var(--or)}
+.hd .cap{margin-left:auto;font-family:var(--f-mono);font-size:14px;letter-spacing:.14em;color:var(--muted)}
+.okm{position:absolute;left:93.5%;top:72px;font-family:var(--f-mono);font-size:16px;font-weight:600;color:var(--ac-t);white-space:nowrap}
+.hl{display:flex;flex-direction:column;border-top:1px solid var(--fg)}
+.hr{display:grid;grid-template-columns:190px 280px 1fr;gap:20px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:22px;align-items:center}
+.hr.th{font-family:var(--f-mono);font-size:18px;letter-spacing:.1em;color:var(--muted)}
+.ch{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px}
+.ch .shp{width:13px;height:13px}
+
+/* 04 notes */
+.ng{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;border-top:1px solid var(--fg)}
+.nc{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:18px 24px;min-width:0}
+.nc:nth-child(odd){border-right:1px solid var(--rule)}
+.nc:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+.nv{position:relative;width:200px;height:110px;flex:none;display:flex;align-items:center}
+.nt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.nt h3{font-size:28px}
+.nt p{font-size:20px;color:var(--muted);line-height:1.55}
+.mob{position:absolute;left:10px;top:4px;width:48px;height:100px;background:#9A3412}
+.web{position:absolute;left:66px;top:22px;width:104px;height:72px;background:var(--bl)}
+.tags{position:absolute;inset:0;display:flex;flex-wrap:wrap-reverse;align-content:flex-start;gap:6px;padding:6px 0}
+.tags span{font-family:var(--f-mono);font-size:15px;padding:3px 9px;background:var(--ink);color:var(--paper);border-radius:999px}
+.sid{font-family:var(--f-gro);font-weight:800;font-size:30px;letter-spacing:-.02em;white-space:nowrap}
+.spw{display:flex;align-items:center;gap:16px;font-family:var(--f-mono);font-size:18px;letter-spacing:.06em;color:var(--muted)}
+.spn{width:70px;height:35px;background:var(--ink);border-radius:70px 70px 0 0;transform-origin:50% 100%}
+
+/* 05 issues */
+.steps{display:flex;align-items:flex-end;gap:6px;height:12px}
+.steps i{width:12px;height:12px;border:1.5px solid var(--fg)}
+.steps i.on{background:var(--fg)}
+.steps i.cur{height:7px;border-radius:999px 999px 0 0;background:var(--ac);border-color:var(--ac)}
+.ipw{position:relative;flex:1}
+.ip{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;visibility:hidden}
+.sec.on .ip.on{visibility:visible}
+.vb{position:relative;height:340px;background:var(--panel);color:var(--ink);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vb .lbl{position:absolute;left:16px;top:12px;font-size:15px;color:#5F5952}
+.vb .sw{position:absolute;left:16px;top:10px;font-family:var(--f-mono);font-size:15px;letter-spacing:.1em;color:#5F5952}
+.ir-w{display:flex;flex-direction:column;gap:18px;min-width:0}
+.ir-w h3{font-size:35px;letter-spacing:-.02em}
+.ir{display:grid;grid-template-columns:80px 1fr;gap:14px;font-size:23px;padding-top:14px;border-top:1px solid var(--rule)}
+.ir .lbl{padding-top:3px;font-size:16px}
+.ir.lrn .lbl{color:var(--ac-t)}
+.ir.lrn p{font-weight:700}
+.git path{fill:none;stroke-width:4;stroke-linecap:round}
+.git circle{fill:var(--paper);stroke-width:3}
+.cl{position:absolute;left:50%;width:250px;height:44px;margin-left:-125px;display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--ink);color:#fff;font-weight:700;font-size:20px}
+.cl b{font-family:var(--f-gro);font-weight:900;font-size:22px;color:inherit;width:18px}
+.code{width:90%;font-family:var(--f-mono);font-size:18px;background:var(--ink);color:#D9D4CB;padding:16px 0}
+.cln{position:relative;padding:3px 22px 3px 46px;white-space:pre}
+.cln::before{content:attr(data-n);position:absolute;left:14px;color:#77736B}
+.cln .bg{position:absolute;inset:0;z-index:0}
+.cln .bg.e{background:repeating-linear-gradient(135deg,rgba(242,237,228,.22) 0 2px,transparent 2px 7px)}
+.cln .bg.o{background:rgba(241,90,37,.4)}
+.cln span{position:relative;z-index:1}
+.mk{position:absolute;right:14px;top:3px;z-index:1;font-weight:700}
+.mk.e{color:#D9D4CB}.mk.o{color:var(--or)}
+.cmp{position:relative;width:270px;padding:24px;border:2px dashed var(--ink);border-radius:14px;background:var(--paper);text-align:center;font-family:var(--f-gro);font-weight:800;font-size:25px}
+.cmp .tt{position:absolute;left:50%;top:-54px;border-radius:8px;background:var(--ink);color:var(--paper);font-family:var(--f-kr);font-weight:500;font-size:18px;padding:6px 14px;white-space:nowrap}
+.cmp .tt::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-bottom:0;border-top-color:var(--ink)}
+.cmp .ic{position:absolute;right:-16px;top:-16px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--f-mono);font-size:16px}
+.cmp .ic.e{background:var(--ink)}.cmp .ic.o{background:var(--or)}
+
+/* 06 KPT */
+.board{position:relative;flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.kc{display:flex;flex-direction:column;min-width:0;position:relative;z-index:1}
+.kc .big{display:flex;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--fg)}
+.kc .big b{font-family:var(--f-gro);font-weight:900;font-size:72px;line-height:.9;letter-spacing:-.04em}
+.kc .big span{font-size:22px;color:var(--muted);font-weight:500}
+/* r4: 인트로 K·P·T 색과 일치 */
+.kc.k .big b{color:var(--ink)}
+.kc.p .big b{color:var(--or)}
+.kc.t .big b{color:var(--bl)}
+.it{padding:12px 0;border-bottom:1px solid var(--rule);font-size:19px;line-height:1.5;background:var(--bg)}
+.it b{display:block;font-size:20px}
+.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2}
+.links path{fill:none;stroke:var(--ac);stroke-width:1.5;stroke-dasharray:1}
+.links circle{fill:var(--ac)}
+
+/* 07 ending */
+.s7{justify-content:center;align-items:flex-start;gap:26px}
+.burst{position:absolute;inset:0;z-index:5;pointer-events:none}
+.b{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);background:var(--c);visibility:hidden}
+.b.c{border-radius:50%}
+.b.h{height:calc(var(--s)/2);border-radius:999px 999px 0 0}
+.b.t{clip-path:polygon(50% 0,100% 100%,0 100%)}
+.b.r{background:none;border:calc(var(--s)*.12) solid var(--c);border-radius:50%}
+.b.p{height:calc(var(--s)*.36);margin-top:calc(var(--s)*-.18);border-radius:999px}
+.s7 .burst{--or:var(--paper)}
+.s7 h2 .w{display:inline-block;overflow:hidden;vertical-align:bottom}
+.s7 h2 .w > span{display:inline-block}
+.s7 h2{display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--f-gro);font-weight:900;font-size:120px;line-height:1;letter-spacing:-.045em}
+.s7 h2 .r1{display:flex;align-items:center;gap:.16em}
+.s7 h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;font-size:150px;line-height:1.05;letter-spacing:-.01em;padding-right:.12em;color:var(--fg)}
+.ast{position:relative;display:block;flex:none;width:.74em;height:.74em}
+.ast b{position:absolute;left:50%;top:50%;width:.15em;height:.37em;margin-left:-.075em;background:var(--ink);transform-origin:50% 0}
+.cred{display:flex;align-items:center;gap:18px;padding:12px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--f-mono);font-size:16px;letter-spacing:.08em;white-space:nowrap}
+.cred em{font-style:normal;color:var(--muted);margin-right:8px}
+.cred > i{width:1px;height:16px;background:var(--fg);opacity:.35}
+.s7 p{font-size:25px;color:var(--muted)}
+.restart{font-family:var(--f-mono);font-size:19px;letter-spacing:.06em;padding:12px 24px;border:1.5px solid var(--fg)}
+
+/* 대기 중 미세 움직임 (GSAP transform과 겹치지 않도록 독립 속성 사용) */
+.kw .kch{position:relative;display:inline-block;transform-origin:left center;white-space:pre}
+@media (prefers-reduced-motion: no-preference){
+  @keyframes flt{50%{translate:0 -6px}}
+  @keyframes idl{to{rotate:360deg}}
+  .sec.idle .shp,.sec.idle .mob,.sec.idle .web{animation:flt 3.2s ease-in-out infinite}
+  .sec.idle .card:nth-child(2n) .shp,.sec.idle .comp i:nth-child(2n),.sec.idle .web{animation-duration:3.8s;animation-delay:-1.2s}
+  .sec.idle .shp.t,.sec.idle .shp.h{animation:flt 3.5s ease-in-out infinite,idl 28s linear infinite}
+  .sec.idle .spn{animation:idl 8s linear infinite}
+  .sec.idle .hr .shp{animation:none}
+}
+#narrow{display:none;position:fixed;inset:0;z-index:60;background:var(--paper);align-items:center;justify-content:center;text-align:center;padding:24px;font-weight:700}
+@media (max-width:1279px){#narrow{display:flex}}
+</style>
+</head>
+<body>
+
+<i class="crop tl"></i><i class="crop tr"></i><i class="crop bl"></i><i class="crop br"></i>
+<span class="meta tl">Hana Retirement Pension — Project Review</span>
+<span class="meta tr">Publishing PL</span>
+<span class="meta bl" id="pg">SC 00 / 07</span>
+<span class="meta bc" id="tc">00:00:00</span>
+<span class="meta br">2026.05.27 — 2026.10.16</span>
+<div id="sheet">
+<span id="skip">CLICK TO SKIP</span>
+<div id="stage">
+
+<!-- 00 -->
+<section class="sec s0" data-name="오프닝">
+  <span class="kw">Publishing<em>.</em></span><span class="wm">Publishing.</span>
+  <div class="top">
+    <div>
+      <p class="lbl" style="margin-bottom:18px">Project Review · 2026</p>
+      <h1><span id="ttl"></span><i class="caret"></i></h1>
+    </div>
+    <div class="comp" aria-hidden="true">
+      <i class="shp c" style="left:0;top:20px;width:96px;height:96px;background:var(--or)"></i>
+      <i class="shp" style="left:104px;top:56px;width:60px;height:60px;background:var(--bl)"></i>
+      <i class="shp h" style="left:104px;top:20px;width:72px;height:36px;background:var(--ye)"></i>
+      <i class="shp t" style="left:40px;top:124px;width:46px;height:40px;background:var(--hatch)"></i>
+      <i class="shp c" style="left:172px;top:130px;width:24px;height:24px;background:#8E9CF2"></i>
+      <i class="shp c" style="left:178px;top:66px;width:30px;height:30px;border:5px solid var(--or)"></i>
+      <i class="shp" style="left:98px;top:134px;width:64px;height:22px;border-radius:999px;background:#9A3412"></i>
+    </div>
+  </div>
+  <div style="position:relative"><div class="rule"></div><span id="pct">000</span></div>
+  <div class="metas">
+    <div><span class="klbl">기간</span><b class="mono">2026.05.27 — 10.16</b></div>
+    <div><span class="klbl">역할</span><b>퍼블리싱 PL</b></div>
+    <div><span class="klbl">채널</span><b>하나원큐 모바일 · 개인뱅킹</b></div>
+    <div><span class="klbl">팀</span><b>퍼블 파트 4인</b></div>
+  </div>
+</section>
+
+<!-- 01 -->
+<section class="sec" data-name="프로젝트 개요">
+  <span class="kw">Overview<em>.</em></span><span class="wm">Overview.</span>
+  <div class="hd"><span class="no">01 —</span><h2>프로젝트 개요</h2></div>
+  <div class="ovl">
+    <div class="ovr"><span class="klbl">프로젝트명</span><span class="v">하나은행 퇴직연금 비대면 손님경험 향상</span><i class="rl"></i></div>
+    <div class="ovr"><span class="klbl">목적</span><span class="v">퇴직연금 비대면 채널(하나원큐 모바일·개인뱅킹) 손님경험 개선</span><i class="rl"></i></div>
+    <div class="ovr"><span class="klbl">투입 기간</span><span class="v mono">2026.05.27 ~ 2026.10.16</span><i class="rl"></i></div>
+    <div class="ovr"><span class="klbl">역할</span><span class="v">퍼블리싱 PL (퍼블 파트 4인)</span><i class="rl"></i></div>
+    <div class="ovr"><span class="klbl">수행 내용</span><span class="v">퍼블리싱 구현, 퍼블 일정(WBS) 관리, 형상·산출물 관리, 개발 대응, 접근성 대응</span><i class="rl"></i></div>
+    <div class="ovr"><span class="klbl">담당 업무</span>
+      <div class="v"><span id="lv">퍼블리싱 전반 · 45개 메뉴</span>
+        <div class="mg" id="mg"></div>
+        <div class="leg" id="leg"><span><i style="background:var(--or)"></i>하나원큐 모바일 26</span><span><i style="background:var(--bl)"></i>개인뱅킹 19</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="sec" data-name="주요 성과" data-short="주요 성과" data-t="ink">
+  <span class="kw">4<em>5</em></span><span class="wm">45</span>
+  <div class="hd"><span class="no">02 —</span><h2>주요 성과</h2></div>
+  <div class="prog"><span class="klbl">WBS 공정률</span><div class="bar"><i class="fill"></i></div><b id="pc2">0%</b><span class="ok">전체 WBS 일정 준수</span></div>
+  <div class="cards">
+    <div class="card"><div class="top"><span class="nm">퍼블리싱</span><i class="shp c" style="background:var(--or)"></i></div>
+      <span class="eq">26 + 19 =</span><div class="num"><span id="n1">0</span><small>메뉴</small></div><span class="sub">모바일 91일 · 개인뱅킹 31일</span></div>
+    <div class="card"><div class="top"><span class="nm">오류 대응</span><i class="shp" style="background:#8E9CF2"></i></div>
+      <div class="sw"><span id="l2a">공식 요청</span><span id="l2b">구두 요청 포함 실제 대응</span></div><div class="num"><span id="n2">0</span><span id="n2p">+</span><small>건</small></div><span class="sub">공식 20건 / 실제 60건 이상</span></div>
+    <div class="card"><div class="top"><span class="nm">UI 개선</span><i class="shp h" style="background:var(--ye);height:12px"></i></div>
+      <div class="num"><span id="n3">0</span><small>건</small></div><span class="sub">현업 간담회 UI 개선사항 반영</span></div>
+    <div class="card"><div class="top"><span class="nm">접근성</span><i class="shp t" style="background:var(--fg)"></i></div>
+      <div class="num"><span id="n4">0</span><small>페이지</small></div><span class="sub">담당 범위 외 · 공통 전체메뉴 포함</span></div>
+    <div class="card"><div class="top"><span class="nm">공통 컴포넌트</span><i class="shp c" style="background:#8E9CF2"></i></div>
+      <p class="txt">IT 통합개발팀과 협업하여 툴팁 기능 추가</p><span class="sub">기존 공통 컴포넌트 오류 파악 및 전달</span></div>
+    <div class="card"><div class="top"><span class="nm">기존 시스템</span><i class="shp" style="background:var(--or)"></i></div>
+      <p class="txt">프론티어 미리보기 기능 오류 원인 추적 및 수정</p><span class="sub">개발 소스 분석 기반 대응</span></div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="sec" data-name="담당 업무 히스토리" data-short="업무 히스토리">
+  <span class="kw">Shift<em>.</em></span><span class="wm">Shift.</span>
+  <div class="hd"><span class="no">03 —</span><h2>담당 업무 히스토리</h2><span class="cap">THREE WAYS TO GET FROM MAY TO OCT.</span></div>
+  <div class="tlw">
+    <div class="months"><span>MAY</span><span>JUN</span><span>JUL</span><span>AUG</span><span>SEP</span><span>OCT</span></div>
+    <div class="lanes" id="lanes">
+      <span class="lane-l" style="top:0">계획</span>
+      <span class="lane-l" style="top:62px">실제</span>
+      <span class="lane-l" style="top:150px">추가</span>
+      <div class="blk pl" data-x="0,14">기획</div>
+      <div class="blk pl" data-x="14,8">컨펌</div>
+      <div class="blk pl" data-x="22,18">디자인</div>
+      <div class="blk pl" data-x="40,26">퍼블</div>
+      <div class="blk pl" data-x="66,22">개발·검수</div>
+      <div class="blk ac" data-x="0,14">기획</div>
+      <div class="blk ac dl" data-x="14,8" data-t="14,22">컨펌</div>
+      <div class="blk ac" data-x="22,18" data-t="36,18">디자인</div>
+      <div class="blk ac pb" data-x="40,26" data-t="54,26" data-u="54,18">퍼블</div>
+      <div class="blk ac" data-x="66,22" data-t="80,22" data-u="72,20">개발·검수</div>
+      <span class="note d" style="left:14%">기획 컨펌 지연</span>
+      <span class="note p" style="left:54%">개발 필요 순 우선 작업 · 추가 근무</span>
+      <div class="blk ex" data-x="20,24">접근성 수정 7개 페이지</div>
+      <div class="blk ex" data-x="46,22">간담회 UI 개선 9건</div>
+      <div class="endm"><span>10.16 종료</span></div>
+      <span class="okm">WBS 준수</span>
+    </div>
+  </div>
+  <div class="hl">
+    <div class="hr th"><span>구분</span><span>담당 업무</span><span>변경 사유 및 경위</span></div>
+    <div class="hr"><span class="ch"><i class="shp x"></i>일정 순연</span><span>연금현황</span><span>현업 기획 컨펌 지연에 따른 순연 (전체 WBS 일정은 준수)</span></div>
+    <div class="hr"><span class="ch"><i class="shp" style="background:var(--or)"></i>범위 외 추가</span><span>접근성 수정 7개 페이지</span><span>현업 요청에 따른 담당 범위 외 대응</span></div>
+    <div class="hr"><span class="ch"><i class="shp" style="background:var(--or)"></i>범위 외 추가</span><span>간담회 UI 개선 9건</span><span>현업 간담회 결과 반영</span></div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="sec" data-name="프로젝트 특이사항" data-short="특이사항" data-t="ye">
+  <span class="kw">Noise<em>.</em></span><span class="wm">Noise.</span>
+  <div class="hd"><span class="no">04 —</span><h2>프로젝트 특이사항</h2></div>
+  <div class="ng">
+    <div class="nc"><div class="nv"><i class="mob"></i><i class="web"></i></div>
+      <div class="nt"><h3>① 모바일·웹 혼재 구조</h3><p>스마트뱅킹(하나원큐)과 인터넷뱅킹(개인뱅킹) 채널을 함께 고도화. 채널별 화면 구성과 대응 방식이 달라 파악할 범위가 넓었음</p></div></div>
+    <div class="nc"><div class="nv"><div class="tags"><span>React</span><span>TypeScript</span><span>Storybook</span><span>Turborepo</span><span>pnpm</span></div></div>
+      <div class="nt"><h3>② 낯선 기술 환경</h3><p>React, TypeScript, Storybook, 모노레포 기반 환경. 기존 jQuery·퍼블리싱 중심 환경과 달라 구조 파악과 퍼블 PL 업무를 병행</p></div></div>
+    <div class="nc"><div class="nv"><span class="sid" id="sid">RP-0101</span></div>
+      <div class="nt"><h3>③ 화면 ID 및 요건의 잦은 변경</h3><p>화면 ID와 요건이 반복 변경되며 팀 내 커뮤니케이션과 산출물 관리에 혼선 발생</p></div></div>
+    <div class="nc"><div class="nv"><div class="spw"><i class="spn"></i><span>WAITING FOR CONFIRM</span></div></div>
+      <div class="nt"><h3>④ 기획 컨펌 지연에 따른 일정 순연</h3><p>현업 기획 컨펌이 늦어지며 기획·디자인 일정이 순차적으로 밀림</p></div></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="sec" data-name="주요 경험 및 문제 해결" data-short="문제 해결" data-t="bl">
+  <span class="kw">Solve<em>.</em></span><span class="wm">Solve.</span>
+  <div class="hd"><span class="no">05 —</span><h2>주요 경험 및 문제 해결</h2><div class="rt steps" id="steps"><i></i><i></i><i></i><i></i></div></div>
+  <div class="ipw">
+    <div class="ip on">
+      <div class="vb"><span class="lbl">git log</span>
+        <svg class="git" viewBox="0 0 380 240" width="380" height="240" aria-hidden="true">
+          <path data-c="ink" d="M30 50 C130 210, 230 -10, 350 50" data-to="M30 50 C130 50, 230 50, 350 50"/>
+          <path data-c="or" d="M30 100 C120 -20, 260 230, 350 100" data-to="M30 100 C120 100, 260 100, 350 100"/>
+          <path data-c="bl" d="M30 150 C150 20, 210 260, 350 150" data-to="M30 150 C150 150, 210 150, 350 150"/>
+          <path data-c="ye" d="M30 200 C110 60, 280 120, 350 200" data-to="M30 200 C110 200, 280 200, 350 200"/>
+          <circle cx="30" cy="50" r="7" data-c="ink"/><circle cx="350" cy="50" r="7" data-c="ink"/>
+          <circle cx="30" cy="100" r="7" data-c="or"/><circle cx="350" cy="100" r="7" data-c="or"/>
+          <circle cx="30" cy="150" r="7" data-c="bl"/><circle cx="350" cy="150" r="7" data-c="bl"/>
+          <circle cx="30" cy="200" r="7" data-c="ye"/><circle cx="350" cy="200" r="7" data-c="ye"/>
+        </svg>
+      </div>
+      <div class="ir-w"><h3>① 형상관리 이력 혼선</h3>
+        <div class="ir"><span class="lbl">상황</span><p>Git 이력이 뒤엉켜 작업 반영 현황 파악이 어려움</p></div>
+        <div class="ir"><span class="lbl">대응</span><p>Git 로그를 직접 분석하고 하나씩 확인하며 현황 정리</p></div>
+        <div class="ir lrn"><span class="lbl">배운 점</span><p>투입 초기부터 브랜치·커밋 규칙을 정하고 팀 내 공유해야 함</p></div></div>
+    </div>
+    <div class="ip">
+      <div class="vb"><div class="sw"><span id="o1">기획서 순서</span><span id="o2" style="color:var(--ac-t)">개발 요청 순서</span></div>
+        <div style="position:relative;width:100%;height:280px">
+          <div class="cl" data-s="4" style="background:var(--or)"><b>1</b>공통 레이아웃</div>
+          <div class="cl" data-s="1" style="background:var(--bl)"><b>2</b>목록</div>
+          <div class="cl" data-s="2"><b>3</b>상세</div>
+          <div class="cl" data-s="0" style="background:var(--ye);color:var(--ink)"><b>4</b>메인</div>
+          <div class="cl" data-s="3" style="background:var(--or)"><b>5</b>완료</div>
+        </div>
+      </div>
+      <div class="ir-w"><h3>② 기획 컨펌 지연과 일정 관리</h3>
+        <div class="ir"><span class="lbl">상황</span><p>현업 컨펌 지연으로 기획·디자인 일정이 순연되어 퍼블 일정에 압박 발생</p></div>
+        <div class="ir"><span class="lbl">대응</span><p>개발에서 먼저 필요한 페이지를 우선 작업하고, 지연분은 추가 근무로 대응하여 전체 WBS 일정 준수</p></div>
+        <div class="ir lrn"><span class="lbl">배운 점</span><p>일정 지연 시 후행 공정(개발)의 필요 순서를 기준으로 우선순위를 조정해야 함</p></div></div>
+    </div>
+    <div class="ip">
+      <div class="vb"><span class="lbl">예시 코드</span>
+        <div class="code">
+          <div class="cln" data-n="1"><span>import { usePreview } from './preview'</span></div>
+          <div class="cln" data-n="2"><span> </span></div>
+          <div class="cln" data-n="3"><span>export function Preview({ src }) {</span></div>
+          <div class="cln" data-n="4" id="errLn"><i class="bg e"></i><i class="bg o"></i><span>  const { frame } = usePreview(src)</span><b class="mk e">✕</b><b class="mk o">✓</b></div>
+          <div class="cln" data-n="5"><span>  return &lt;div ref={frame} /&gt;</span></div>
+          <div class="cln" data-n="6"><span>}</span></div>
+        </div>
+      </div>
+      <div class="ir-w"><h3>③ 신규 기술 환경 적응</h3>
+        <div class="ir"><span class="lbl">상황</span><p>React·TypeScript·모노레포 환경에서 기존 시스템 오류 및 개발 이슈 발생</p></div>
+        <div class="ir"><span class="lbl">대응</span><p>개발 소스를 분석해 대응 방향을 도출하고, 프론티어 미리보기 기능 오류를 직접 추적·수정</p></div>
+        <div class="ir lrn"><span class="lbl">배운 점</span><p>낯선 스택일수록 라우팅·빌드 구조 등 전체 구조를 먼저 파악해야 대응 속도가 빨라짐</p></div></div>
+    </div>
+    <div class="ip">
+      <div class="vb"><span class="lbl">common component</span>
+        <div class="cmp" id="cmp"><span class="tt">툴팁 추가</span>Common Button<i class="ic e">!</i><i class="ic o">✓</i></div>
+      </div>
+      <div class="ir-w"><h3>④ 담당 범위 외 품질 이슈 대응</h3>
+        <div class="ir"><span class="lbl">상황</span><p>공통 컴포넌트 오류, 접근성 미흡 페이지 등 범위 외 이슈 발생</p></div>
+        <div class="ir"><span class="lbl">대응</span><p>공통 컴포넌트 오류 파악 및 전달, IT 통합개발팀과 툴팁 기능 추가, 접근성 7개 페이지 수정</p></div>
+        <div class="ir lrn"><span class="lbl">배운 점</span><p>공통 영역 이슈는 담당 부서와 범위를 먼저 명확히 한 뒤 대응해야 함</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="sec" data-name="자기 평가 (KPT)" data-short="자기 평가">
+  <span class="kw">KP<em>T</em></span><span class="wm">KPT</span>
+  <div class="hd"><span class="no">06 —</span><h2>자기 평가</h2></div>
+  <div class="board" id="board">
+    <svg class="links" id="links" aria-hidden="true"></svg>
+    <div class="kc k"><div class="big"><b>K</b><span>Keep · 잘한 점</span></div>
+      <div class="it">기획 컨펌 지연 속에서도 우선순위 조정으로 전체 WBS 일정 준수</div>
+      <div class="it">낯선 기술 환경에서 소스 분석을 통해 오류 원인을 직접 추적하고 대응</div>
+      <div class="it">담당 범위 외 공통 컴포넌트·접근성 이슈까지 협업하여 대응</div></div>
+    <div class="kc p"><div class="big"><b>P</b><span>Problem · 아쉬운 점</span></div>
+      <div class="it" data-to="0"><b>업무 분장 미흡</b>파트 내 업무 분장이 명확하지 않아 커뮤니케이션 혼선 발생</div>
+      <div class="it" data-to="1"><b>산출물 관리</b>화면 ID·요건 변경을 체계적으로 관리하지 못해 산출물 정리에 시간 소요</div>
+      <div class="it" data-to="3"><b>기술 이해도</b>React·TypeScript 구조(라우터 등)를 충분히 파악하지 못한 상태로 진행</div></div>
+    <div class="kc t"><div class="big"><b>T</b><span>Try · 다음 적용</span></div>
+      <div class="it"><b>투입 초기</b>업무 분장 기준과 산출물·형상관리 규칙을 먼저 정리하여 팀 내 공유</div>
+      <div class="it"><b>화면 ID·요건 변경 시</b>변경 이력을 별도로 관리하여 산출물 정합성 유지</div>
+      <div class="it"><b>일정 지연 시</b>후행 공정 기준으로 우선순위를 정하고 조기에 협의</div>
+      <div class="it"><b>신규 기술 스택 투입 시</b>라우팅·빌드 등 전체 구조를 우선 파악</div></div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section class="sec s7" data-name="엔딩" data-t="or">
+  <span class="wm">Done.</span>
+  <div class="burst" aria-hidden="true">
+    <i class="b c"  data-m="pulse" style="--s:120px##;--c:var(--ink)"></i>
+    <i class="b"    data-m="spin"  style="--s:90px###;--c:var(--or)"></i>
+    <i class="b h"  data-m="drift" style="--s:160px#;--c:var(--bl)"></i>
+    <i class="b t"  data-m="spin"  style="--s:220px;--c:var(--paper)"></i>
+    <i class="b c"  data-m="drift" style="--s:160px;--c:var(--ye)"></i>
+    <i class="b"    data-m="flip"  style="--s:180px;--c:var(--ink)"></i>
+    <i class="b r"  data-m="pulse" style="--s:200px;--c:var(--or)"></i>
+    <i class="b p"  data-m="spin"  style="--s:190px;--c:var(--bl)"></i>
+    <i class="b c"  data-m="drift" style="--s:80px;--c:var(--or)"></i>
+    <i class="b t"  data-m="flip"  style="--s:140px;--c:var(--ink)"></i>
+    <i class="b"    data-m="drift" style="--s:110px;--c:var(--ye)"></i>
+    <i class="b c"  data-m="pulse" style="--s:70px;--c:var(--bl)"></i>
+  </div>
+  <h2><span class="r1"><i class="ast" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="w"><span>Published</span></span></span> <em class="w"><span>2026.10.16</span></em></h2>
+  <div class="cred"><span><em>ROLE</em>퍼블리싱 PL</span><i></i><span><em>PERIOD</em>2026.05.27—10.16</span><i></i><span><em>CHANNEL</em>하나원큐 / 개인뱅킹</span><i></i><span><em>TEAM</em>4</span></div>
+  <p>하나은행 퇴직연금 비대면 손님경험 향상 · 퍼블리싱 PL 철수 완료</p>
+  <button class="restart" id="restart" type="button">처음부터 다시 보기</button>
+</section>
+
+</div>
+
+<div id="fx" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="fxdefs"></defs></svg>
+
+<nav id="toc" aria-label="목차">
+  <p class="tt">CONTENTS</p>
+  <div style="position:relative"><i class="rail"></i><i id="dot"></i><ol id="tocl"></ol></div>
+</nav>
+<div id="nextWrap"><button id="next" type="button"><span id="nextL">NEXT</span><b id="nextT"></b><span>→</span></button></div>
+</div>
+
+<div id="narrow">PC 환경(1280px 이상)에서 확인해 주세요</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const secs = $$('.sec'), S = i => secs[i];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.random() * (b - a);
+const css = getComputedStyle(document.documentElement);
+const C = { ink: css.getPropertyValue('--ink').trim(), or: css.getPropertyValue('--or').trim(), bl: css.getPropertyValue('--bl').trim(), ye: css.getPropertyValue('--ye').trim(), muted: css.getPropertyValue('--muted').trim(), paper: css.getPropertyValue('--paper').trim() };
+$$('[data-c]').forEach(el => el.setAttribute('stroke', C[el.dataset.c]));
+
+const mk = () => gsap.timeline({ paused: true });
+const NS = 'http://www.w3.org/2000/svg';
+const sheet = $('#sheet'), fxRoot = $('#fx'), fdefs = $('#fxdefs');
+const SW = () => sheet.clientWidth, SH = () => sheet.clientHeight;
+let scale = 1;
+const hash = (a, b, c) => { const v = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453; return v - Math.floor(v); };
+// 블러 스왑: 나가는 요소와 들어오는 요소를 시점 분리
+const swapOut = { opacity: 0, filter: 'blur(8px)', y: -6, duration: .18, ease: 'power2.in' };
+const swapIn = [{ opacity: 0, filter: 'blur(8px)', y: 6 }, { opacity: 1, filter: 'blur(0px)', y: 0, duration: .22, ease: 'power2.out' }];
+
+// 방향 모션블러: feGaussianBlur stdDeviation의 한 축을 진행값으로 구동 (0이면 필터 해제). r2: 00(세로)·03(가로)에서만 사용
+let fid = 0;
+function blurTw(tl, el, a, b, dur, ease, at, axis = 'x') {
+  const f = document.createElementNS(NS, 'filter'), g = document.createElementNS(NS, 'feGaussianBlur'), id = 'hb' + fid++;
+  f.id = id;
+  (axis === 'x' ? [['x', '-50%'], ['y', '-10%'], ['width', '200%'], ['height', '120%']] : [['x', '-10%'], ['y', '-60%'], ['width', '120%'], ['height', '220%']])
+    .concat([['color-interpolation-filters', 'sRGB']]).forEach(([k, v]) => f.setAttribute(k, v));
+  g.setAttribute('stdDeviation', '0 0');
+  f.appendChild(g); fdefs.appendChild(f);
+  const o = { v: a };
+  const apply = () => { const v = o.v.toFixed(2); g.setAttribute('stdDeviation', axis === 'x' ? v + ' 0' : '0 ' + v); el.style.filter = o.v > .1 ? `url(#${id})` : ''; };
+  return tl.fromTo(o, { v: a }, { v: b, duration: dur, ease, onUpdate: apply, immediateRender: false }, at);
+}
+
+/* ---------- G2·G3 필드 레이어 ---------- */
+// 섹션별 필드 색 / 필드 위 키워드 색
+const FC = ['or', 'paper', 'ink', 'paper', 'ink', 'bl', 'paper', 'or'];
+const WC = { or: 'ink', bl: 'paper', ink: 'paper', paper: 'bl' };
+const G = secs.map((s, i) => {
+  const grp = document.createElement('div');
+  grp.className = 'fxs'; grp.dataset.f = FC[i];
+  grp.style.setProperty('--fc', C[FC[i]]); grp.style.setProperty('--wc', C[WC[FC[i]]]);
+  grp.innerHTML = '<i class="fld"></i><svg class="gd"><circle cx="50%" cy="50%" r="17%"/><circle cx="50%" cy="50%" r="31%"/><line x1="0" y1="50%" x2="100%" y2="50%"/><line x1="50%" y1="0" x2="50%" y2="100%"/></svg>';
+  fxRoot.appendChild(grp);
+  const g = { grp, fld: $('.fld', grp), gd: $('.gd', grp) };
+  const kw = $('.kw', s);
+  if (kw) {
+    // 키워드를 글자 단위로 분리, 마침표 em은 원형 점으로
+    const fxl = document.createElement('span'); let dot = null;
+    fxl.className = 'fxl';
+    [...kw.childNodes].forEach(n => {
+      if (n.nodeType === 3) [...n.textContent].forEach(c => { const sp = document.createElement('span'); sp.className = 'kch'; sp.textContent = c; fxl.appendChild(sp); });
+      else if (n.textContent === '.') { n.className = 'fxd'; dot = n; }
+      else { n.classList.add('kch'); fxl.appendChild(n); }
+    });
+    kw.replaceChildren(fxl);
+    if (dot) kw.appendChild(dot);
+    grp.appendChild(kw);
+    gsap.set(kw, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
+    Object.assign(g, { kw, fxl, fxd: dot, ch: $$('.kch', fxl) });
+  }
+  return g;
+});
+const showField = i => { gsap.set(G[i].grp, { autoAlpha: 1, clearProps: 'clipPath' }); gsap.set(G[i].fld, { autoAlpha: 1, backgroundColor: C[FC[i]] }); };
+// r2 G3-1: 단어 전체가 들어오는 크기. 100px 기준 폭을 측정해 높이 상한과 비교 (fit()마다 호출)
+function sizeKW() {
+  G.forEach((g, i) => {
+    if (!g.kw) return;
+    g.kw.style.setProperty('--kfs', '100px');
+    const w = g.kw.offsetWidth;
+    g.kw.style.setProperty('--kfs', Math.min(SH() * (i === 2 ? .6 : .42), SW() * .82 / (w / 100)) + 'px');
+  });
+}
+const fsOf = g => parseFloat(getComputedStyle(g.kw).fontSize);
+
+// 글자 폭이 물결처럼 넓어졌다 좁아짐 (width로 리플로우 + scaleX로 글자 자체 확장). r2: 00에서만 사용
+function wave(tl, kw, dur, at) {
+  const chs = $$('.kch', kw), o = { p: 0 };
+  tl.fromTo(o, { p: 0 }, { p: 1, duration: dur, ease: 'none', immediateRender: false,
+    onStart: () => chs.forEach(c => { c.style.width = ''; c.style.transform = ''; c.dataset.w = c.offsetWidth; }),
+    onUpdate: () => { const amp = .45 * Math.sin(Math.PI * o.p);
+      chs.forEach((c, i) => { const k = 1 + amp * Math.sin(o.p * 9 + i * 1.25);
+        c.style.width = c.dataset.w * k + 'px'; c.style.transform = `scaleX(${k})`; }); },
+    onComplete: () => chs.forEach(c => { c.style.width = ''; c.style.transform = ''; }) }, at);
+}
+
+/* ---------- r2 G3-3: 키워드별 연출 (각 함수는 퇴장이 끝나는 시점을 반환) ---------- */
+// 복제 레이어(04 RGB 분리·가로 띠)
+const copyKW = (g, cls, n) => Array.from({ length: n }, () => {
+  const c = document.createElement('span');
+  c.className = 'cp ' + cls;
+  c.innerHTML = g.fxl.outerHTML + (g.fxd ? g.fxd.outerHTML : '');
+  g.kw.appendChild(c);
+  return c;
+});
+// 02: 숫자 글자를 세로 스트립(0~9 ×3)으로 교체
+(() => {
+  const g = G[2];
+  g.kw.classList.add('roll');
+  g.ch.forEach(c => { c.innerHTML = '<span class="ks">' + Array.from({ length: 30 }, (_, k) => `<i>${k % 10}</i>`).join('') + '</span>'; });
+  g.strips = $$('.ks', g.kw);
+})();
+// 04: RGB 복제 2장 + 가로 띠 5개
+(() => {
+  const g = G[4];
+  g.rgb = copyKW(g, 'rgb', 2);
+  g.rgb.forEach((c, j) => { c.style.color = j ? C.bl : C.or; });
+  g.bands = copyKW(g, 'band', 5);
+  g.bands.forEach((c, k) => { c.style.clipPath = `inset(${k * 20}% 0 ${80 - k * 20}% 0)`; });
+})();
+// 06: 글자별 색 + 바닥선
+(() => {
+  const g = G[6];
+  g.ch.forEach((c, k) => { c.style.color = [C.ink, C.or, C.bl][k]; c.insertAdjacentHTML('beforeend', '<i class="ul"></i>'); });
+  g.uls = $$('.ul', g.kw);
+})();
+
+const KW = {
+  // 00 조판: 활자가 위에서 한 자씩 떨어져 박힘 → 물결 → 줄째로 위로 밀려 넘어감(세로 블러)
+  0(tl, g, at) {
+    const L = [...g.ch, g.fxd];
+    gsap.set(L, { transformOrigin: '50% 100%' });
+    tl.set(L, { autoAlpha: 0, y: () => -.6 * fsOf(g) }, at)
+      .to(L, { autoAlpha: 1, y: 0, duration: .12, stagger: .05, ease: 'back.out(2.4)' }, at);
+    L.forEach((el, k) => tl.fromTo(el, { scaleY: .85 }, { scaleY: 1, duration: .12, ease: 'power2.out', immediateRender: false }, at + k * .05 + .12));
+    const w = at + .05 * (L.length - 1) + .24;
+    wave(tl, g.kw, .5, w);
+    tl.fromTo(g.kw, { y: 0 }, { y: () => -SH() * .75, duration: .35, ease: 'expo.in', immediateRender: false }, w + .5);
+    blurTw(tl, g.kw, 0, 50, .35, 'expo.in', w + .5, 'y');
+    return w + .85;
+  },
+  // 01 줌아웃 조망: "O"가 화면을 채운 상태에서 단어 전체로 빠르게 줌아웃 + 자간 수렴 → 가이드 초점 → 점만 남기고 줌아웃
+  1(tl, g, at) {
+    const kw = g.kw, O = g.ch[0], z = { p: 0 };
+    const render = () => {
+      const e = z.p, ls = .4 - .445 * e;
+      kw.style.letterSpacing = e >= 1 ? '' : ls + 'em';
+      // 글자 상자 폭에는 뒤쪽 자간이 포함되므로 빼고 글리프 중심을 구함
+      const ox = O.offsetLeft + (O.offsetWidth - (e >= 1 ? -.045 : ls) * fsOf(g)) / 2, nat = SW() / 2 - kw.offsetWidth / 2 + ox;
+      gsap.set(kw, { transformOrigin: `${ox}px 50%`, scale: 6 - 5 * e, x: (SW() / 2 - nat) * (1 - e) });
+    };
+    tl.set(g.fxd, { scale: 1 }, at)
+      .set(g.fxl, { scale: 1 }, at)
+      .fromTo(z, { p: 0 }, { p: 1, duration: .7, ease: 'expo.out', onUpdate: render, immediateRender: false }, at)
+      .fromTo(g.gd, { scale: 1.4 }, { scale: 1, transformOrigin: '50% 50%', duration: .45, ease: 'expo.out', immediateRender: false }, at + .7)
+      .to(g.fxl, { scale: 0, transformOrigin: '100% 70%', duration: .35, ease: 'expo.in' }, at + 1.15);
+    return at + 1.58;
+  },
+  // 02 카운트: 00 → 45 세로 롤, 앞자리가 먼저 멈춤. 퇴장 없음(heroFly)
+  2(tl, g, at) {
+    const [a, b] = g.strips, yp = ix => -ix * 100 / 30;
+    tl.fromTo(a, { yPercent: 0 }, { yPercent: yp(14), duration: .7, ease: 'expo.out', immediateRender: false }, at)
+      .fromTo(b, { yPercent: 0 }, { yPercent: yp(25), duration: .8, ease: 'expo.out', immediateRender: false }, at);
+    return at + .8;
+  },
+  // 03 일정 밀림: 컷으로 등장 → 뒤 글자부터 오른쪽으로 밀림 → 정지 → 오른쪽으로 빠짐(가로 블러)
+  3(tl, g, at) {
+    const L = [...g.ch, g.fxd];
+    // 벌어진 폭의 절반만큼 단어 전체를 왼쪽으로 보정해 화면 안에 유지
+    const push = .5 + .06 * (L.length - 1);
+    tl.set(g.kw, { x: 0 }, at)
+      .fromTo(L, { x: 0 }, { x: k => k * .25 * fsOf(g), duration: .5, ease: 'expo.inOut', stagger: { each: .06, from: 'end' }, immediateRender: false }, at + .15)
+      .fromTo(g.kw, { x: 0 }, { x: () => -(L.length - 1) * .25 * fsOf(g) / 2, duration: push, ease: 'expo.inOut', immediateRender: false }, at + .15);
+    const out = at + .15 + push + .3;
+    tl.to(g.kw, { x: () => SW() * .9, duration: .35, ease: 'expo.in' }, out);
+    blurTw(tl, g.kw, 0, 60, .35, 'expo.in', out);
+    return out + .35;
+  },
+  // 04 글리치: 스크램블 확정 + RGB 분리 → 가로 띠 어긋남 2회 → 띠가 찢어져 나감
+  4(tl, g, at) {
+    const CH = '#%&@$?!/ABCDEFGHJKLMNPQRSTUVWXYZ', orig = g.ch.map(c => c.textContent), n = g.ch.length, sc = { p: 0 }, gl = { q: 0 };
+    const scr = () => {
+      const st = Math.floor(sc.p * 14), done = sc.p >= 1, fs = fsOf(g);
+      g.ch.forEach((c, k) => { c.textContent = done || k < (sc.p - .3) / .7 * n ? orig[k] : CH[Math.floor(hash(k, st, 11) * CH.length)]; });
+      g.rgb.forEach((c, j) => gsap.set(c, { autoAlpha: done ? 0 : 1, x: done ? 0 : (hash(st, j, 12) - .5) * .08 * fs, y: done ? 0 : (hash(st, j, 13) - .5) * .04 * fs }));
+    };
+    const slice = () => {
+      const ph = Math.min(3, Math.floor(gl.q * 4)), fs = fsOf(g);
+      g.bands.forEach((b, k) => gsap.set(b, { x: gl.q < 1 && ph % 2 === 0 ? (hash(k, ph, 14) - .5) * .3 * fs : 0 }));
+    };
+    tl.set([g.fxl, g.fxd], { autoAlpha: 1 }, at)
+      .set(g.bands, { autoAlpha: 0, x: 0 }, at)
+      .fromTo(sc, { p: 0 }, { p: 1, duration: .6, ease: 'steps(14)', onUpdate: scr, immediateRender: false }, at)
+      .set(g.bands, { autoAlpha: 1 }, at + .75)
+      .set([g.fxl, g.fxd], { autoAlpha: 0 }, at + .75)
+      .fromTo(gl, { q: 0 }, { q: 1, duration: .25, ease: 'none', onUpdate: slice, immediateRender: false }, at + .75);
+    g.bands.forEach((b, k) => tl.to(b, { x: () => (k % 2 ? 1 : -1) * SW() * (.6 + hash(k, 2, 15) * .5), duration: .25 + hash(k, 3, 16) * .15, ease: 'expo.in' }, at + 1.1));
+    tl.set(g.bands, { autoAlpha: 0 }, at + 1.5).set([g.fxl, g.fxd], { autoAlpha: 1 }, at + 1.5);
+    return at + 1.5;
+  },
+  // 05 퍼즐 맞춤: 사방에 흩어진 글자가 하나씩 스냅 → 점 생성·맥박 → 글자 컷, 점만 커져 블롭으로
+  5(tl, g, at) {
+    const L = g.ch, d = g.fxd;
+    const sx = k => (hash(k, 1, 21) - .5) * .8 * SW(), sy = k => (hash(k, 2, 22) - .5) * .8 * SH(), sr = k => (hash(k, 3, 23) - .5) * 240;
+    tl.set(g.fxl, { autoAlpha: 1 }, at)
+      .set(g.kw, { scale: 1 }, at)
+      .set(d, { scale: 0, x: 0, y: 0, autoAlpha: 1 }, at)
+      .set(L, { x: sx, y: sy, rotation: sr }, at)
+      .to(L, { x: 0, y: 0, rotation: 0, duration: .5, stagger: .07, ease: 'back.out(1.6)' }, at);
+    const snap = at + .5 + .07 * (L.length - 1);
+    tl.fromTo(g.kw, { scale: 1.04 }, { scale: 1, duration: .2, ease: 'power2.out', immediateRender: false }, snap)
+      .to(d, { scale: 1, duration: .2, ease: 'back.out(2)' }, snap)
+      .to(d, { keyframes: [{ scale: 1.3, duration: .15 }, { scale: 1, duration: .15 }], ease: 'sine.inOut' }, snap + .25)
+      .set(g.fxl, { autoAlpha: 0 }, snap + .6);
+    // 점이 화면 중앙으로 이동하며 블롭 크기까지 커짐
+    let D = null;
+    const P = { p: 0 }, grow = () => {
+      if (!D) { const r = d.getBoundingClientRect(), s = sheet.getBoundingClientRect();
+        D = { x: s.left + s.width / 2 - r.left - r.width / 2, y: s.top + s.height / 2 - r.top - r.height / 2, s: innerHeight * .46 * .7 / r.width }; }
+      gsap.set(d, { x: D.x * P.p, y: D.y * P.p, scale: 1 + (D.s - 1) * P.p });
+    };
+    tl.fromTo(P, { p: 0 }, { p: 1, duration: .35, ease: 'expo.in', onStart: () => { D = null; }, onUpdate: grow, immediateRender: false }, snap + .6);
+    return snap + .95;
+  },
+  // 06 세 칸 분리: K·P·T가 위에서 떨어져 착지(바닥선) → 정지 → 각자 다른 방향으로 갈라짐
+  6(tl, g, at) {
+    const L = g.ch;
+    tl.set(L, { yPercent: -120, x: 0, y: 0, autoAlpha: 0 }, at)
+      .to(L, { yPercent: 0, autoAlpha: 1, duration: .45, stagger: .15, ease: 'bounce.out' }, at);
+    g.uls.forEach((u, k) => tl.fromTo(u, { scaleX: 0 }, { scaleX: 1, duration: .2, ease: 'expo.out', immediateRender: false }, at + k * .15 + .17));
+    const out = at + .3 + .45 + .25;
+    tl.to(L[0], { x: () => -SW() * .7, duration: .35, ease: 'expo.in' }, out)
+      .to(L[1], { y: () => SH() * .8, duration: .35, ease: 'expo.in' }, out)
+      .to(L[2], { x: () => SW() * .7, duration: .35, ease: 'expo.in' }, out);
+    return out + .35;
+  }
+};
+
+// mode: cut(필드 레이어 통째로 숨김) / keep(필드만 숨기고 레이어 유지) / none(호출부에서 처리)
+// r2: intro는 필드·가이드·워터마크만 처리하고 단어 모션은 KW[i]에 맡김
+function intro(tl, i, mode = 'cut') {
+  const g = G[i];
+  tl.set(g.grp, { autoAlpha: 1 }, 0).set(g.fld, { autoAlpha: 1 }, 0).set(g.kw, { autoAlpha: 1, x: 0, y: 0 }, 0)
+    .fromTo(g.gd, { opacity: 0 }, { opacity: .15, duration: .25, immediateRender: false }, 0);
+  const end = KW[i](tl, g, 0);
+  tl.to(g.gd, { opacity: 0, duration: .2 }, end - .25);
+  if (mode === 'cut') tl.set(g.grp, { autoAlpha: 0 }, end);
+  if (mode === 'keep') tl.set([g.fld, g.kw], { autoAlpha: 0 }, end);
+  if (mode !== 'none') tl.fromTo($('.wm', S(i)), { opacity: 0 }, { opacity: .045, duration: .6 }, end);
+  return end;
+}
+const hd = (tl, s, at) => tl.from($('.hd', s), { opacity: 0, y: 16, duration: .4, ease: 'power3.out' }, at);
+const T = {};
+
+// 슬롯 롤 숫자: 자릿수별 세로 스트립(빈칸 + 0~9 ×3)을 yPercent로 이동
+function roller(el, digits, suf = '') {
+  el.textContent = '';
+  const cols = Array.from({ length: digits }, () => {
+    const c = document.createElement('span'), st = document.createElement('span');
+    c.className = 'sc'; st.className = 'ss';
+    st.innerHTML = '<i>&nbsp;</i>' + Array.from({ length: 30 }, (_, k) => `<i>${k % 10}</i>`).join('');
+    c.appendChild(st); el.appendChild(c);
+    return { c, st, idx: 0 };
+  });
+  if (suf) el.append(suf);
+  const idxOf = v => String(v).padStart(digits, ' ').split('').map(ch => ch === ' ' ? 0 : 1 + +ch);
+  const yp = ix => -ix * 100 / 31;
+  idxOf(0).forEach((ix, k) => { cols[k].idx = ix; gsap.set(cols[k].st, { yPercent: yp(ix) }); gsap.set(cols[k].c, { width: ix ? '1ch' : '0ch' }); });
+  return (v, dur) => {
+    const sub = gsap.timeline();
+    idxOf(v).forEach((ix, k) => {
+      const col = cols[k];
+      if (ix) { const min = col.idx + (k === digits - 1 ? 10 : 1); while (ix < min && ix + 10 <= 30) ix += 10; }
+      sub.fromTo(col.st, { yPercent: yp(col.idx) }, { yPercent: yp(ix), duration: dur, ease: 'expo.out', immediateRender: false }, 0)
+        .fromTo(col.c, { width: col.idx ? '1ch' : '0ch' }, { width: ix ? '1ch' : '0ch', duration: dur * .4, immediateRender: false }, 0);
+      col.idx = ix;
+    });
+    return sub;
+  };
+}
+
+/* ---------- 00 opening: 프리롤 ---------- */
+(() => {
+  const s = S(0), g = G[0], tl = mk(), rule = $('.rule', s), pct = $('#pct');
+  const ttl = $('#ttl'), text = '하나은행 퇴직연금\n비대면 손님경험 향상', o = { n: 0 };
+  const pre = document.createElement('div');
+  pre.innerHTML = '<svg class="rays" viewBox="-100 -100 200 200">' + Array.from({ length: 24 }, (_, k) => {
+    const a = k * Math.PI / 12, c = Math.cos(a), sn = Math.sin(a);
+    return `<line pathLength="1" x1="${(10 * c).toFixed(2)}" y1="${(10 * sn).toFixed(2)}" x2="${(96 * c).toFixed(2)}" y2="${(96 * sn).toFixed(2)}"/>`;
+  }).join('') + '</svg><i class="pdot"></i>';
+  g.grp.insertBefore(pre, g.kw);
+  const psub = document.createElement('span');
+  psub.className = 'psub'; psub.textContent = 'project review';
+  g.kw.appendChild(psub);
+  const rays = $('.rays', pre), lines = $$('line', pre), pdot = $('.pdot', pre);
+
+  tl.set(g.grp, { autoAlpha: 1 }, 0)
+    .set(g.fld, { autoAlpha: 1, backgroundColor: C.ink }, 0)
+    .set(g.gd, { color: C.paper }, 0)
+    .set([rays, pdot], { autoAlpha: 1 }, 0)
+    .fromTo(g.gd, { opacity: 0 }, { opacity: .15, duration: .3, immediateRender: false }, 0)
+    .fromTo(lines, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .25, stagger: .02, ease: 'expo.out', immediateRender: false }, .3)
+    .fromTo(rays, { rotation: 0 }, { rotation: 15, duration: 1, ease: 'none', immediateRender: false }, .3)
+    .fromTo(rays, { scale: 1 }, { scale: 0, duration: .3, ease: 'expo.in', immediateRender: false }, 1.0)
+    .fromTo(pdot, { scale: 0 }, { scale: 1, duration: .15, ease: 'back.out(2)', immediateRender: false }, 1.15)
+    .to(pdot, { scale: () => Math.hypot(SW(), SH()) / 14, duration: .2, ease: 'expo.in' }, 1.3)
+    .set(g.fld, { backgroundColor: C.or }, 1.5)
+    .set([pdot, rays], { autoAlpha: 0 }, 1.5)
+    .set(g.gd, { color: C.ink }, 1.5);
+  tl.set(g.kw, { autoAlpha: 1, x: 0, y: 0 }, 1.5);
+  const e0 = KW[0](tl, g, 1.5);
+  tl.fromTo(psub, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: .4, ease: 'expo.out', immediateRender: false }, 2.0)
+    .to(g.gd, { opacity: 0, duration: .2 }, e0 - .3)
+    .set(g.grp, { autoAlpha: 0 }, e0)
+    .set([g.kw, psub], { autoAlpha: 0 }, e0);
+  // 이후 기존 로딩 바 → 타이핑 → 도형 → 메타
+  tl.fromTo(rule, { scaleX: 0 }, { keyframes: [{ scaleX: .34, duration: .5 }, { scaleX: .37, duration: .4 }, { scaleX: .72, duration: .45 }, { scaleX: .74, duration: .3 }, { scaleX: 1, duration: .35 }],
+      ease: 'power2.out', onUpdate: () => { pct.textContent = String(Math.round(gsap.getProperty(rule, 'scaleX') * 100)).padStart(3, '0'); } }, e0 + .2)
+    .to(pct, { opacity: 0, duration: .25 }, '+=.15')
+    .addLabel('afterLoad')
+    .fromTo($('.wm', s), { opacity: 0 }, { opacity: .045, duration: .6 }, 'afterLoad')
+    .to(o, { n: text.length, duration: 1, ease: 'none', onUpdate: () => {
+      const n = Math.round(o.n), t = text.slice(0, n).replace(/\n/g, '<br>');
+      ttl.innerHTML = n >= text.length ? t + '<span class="pt">.</span>' : t; } }, 'afterLoad')
+    .from($('.lbl', s), { opacity: 0, duration: .3 }, '<')
+    .from($$('.comp i', s), { scale: 0, rotation: () => rand(-90, 90), duration: .5, stagger: .07, ease: 'back.out(1.8)' }, '-=.4')
+    .from($$('.metas > div', s), { opacity: 0, y: 14, duration: .35, stagger: .08 }, '-=.2')
+    .set($('.caret', s), { display: 'none' });
+  T['0'] = tl;
+})();
+
+/* ---------- 01 overview: "45" 점 매트릭스 ---------- */
+(() => {
+  const s = S(1), tl = mk(), mg = $('#mg');
+  for (let i = 0; i < 45; i++) { const e = document.createElement('i'); e.className = i < 26 ? 'm' : 'w'; mg.appendChild(e); }
+  const cells = $$('i', mg);
+  // 5×7 비트맵 "45": 4는 오렌지 칸, 5는 파랑 칸으로, 남는 칸은 숫자 주변에 흩어 둠
+  const F = { 4: ['00010', '00110', '01010', '10010', '11111', '00010', '00010'], 5: ['11111', '10000', '11110', '00001', '00001', '10001', '01110'] };
+  const P = 23, MP = 32, ox = (23 * P - 11 * MP) / 2, oy = -7 * MP - 16;
+  const pts = d => F[d].flatMap((row, r) => [...row].flatMap((b, c) => b === '1' ? [[ox + (c + (d === 5 ? 6 : 0)) * MP, oy + r * MP]] : []));
+  const p4 = pts(4), p5 = pts(5), mcx = ox + 5.5 * MP, mcy = oy + 3.5 * MP;
+  const spot = (i, list, k) => list[k] || (() => { const a = hash(i, 3, 1) * Math.PI * 2; return [mcx + Math.cos(a) * (11 * MP / 2 + 50 + hash(i, 4, 2) * 60), mcy + Math.sin(a) * (7 * MP / 2 + 30 + hash(i, 5, 3) * 40)]; })();
+  const tgt = cells.map((_, i) => i < 26 ? spot(i, p4, i) : spot(i, p5, i - 26));
+  const home = i => [(i % 23) * P, Math.floor(i / 23) * P];
+  const dx = i => tgt[i][0] - home(i)[0], dy = i => tgt[i][1] - home(i)[1];
+
+  const cut = intro(tl, 1);
+  hd(tl, s, cut);
+  $$('.ovr', s).forEach((r, i) => {
+    const rl = $('.rl', r);
+    if (rl) tl.fromTo(rl, { scaleX: 0 }, { scaleX: 1, duration: .35, ease: 'power2.inOut' }, '-=.1');
+    tl.from($('.klbl', r), { opacity: 0, x: -12, duration: .22 }, rl ? '<.05' : '>');
+    if (i < 5) tl.from($('.v', r), { opacity: 0, x: -12, duration: .28 }, '<.1');
+  });
+  // 매트릭스가 떠 있는 동안 뒤쪽 행을 옅게 해서 숫자가 읽히게 함
+  const behind = $$('.ovr', s).slice(0, 5);
+  tl.from($('#lv'), { opacity: 0, x: -12, duration: .28 })
+    .addLabel('mx')
+    .to(behind, { opacity: .12, duration: .25 }, 'mx')
+    .fromTo(cells, { x: () => rand(-200, 600), y: () => rand(-380, -60), rotation: () => rand(-180, 180), opacity: 0, scale: .4 },
+      { x: i => dx(i), y: i => dy(i), rotation: 0, opacity: 1, scale: 1.4, duration: .5, stagger: .003, ease: 'expo.out' }, 'mx')
+    .to(cells, { x: 0, y: 0, scale: 1, duration: .8, stagger: .01, ease: 'expo.inOut' }, '+=.3')
+    .to(behind, { opacity: 1, duration: .3 }, '<')
+    .fromTo(cells.slice(0, 26), { filter: 'brightness(1)' }, { filter: 'brightness(1.7)', duration: .1, repeat: 1, yoyo: true, stagger: .015 })
+    .fromTo(cells.slice(26), { filter: 'brightness(1)' }, { filter: 'brightness(1.9)', duration: .1, repeat: 1, yoyo: true, stagger: .015 }, '-=.1')
+    .from($('#leg'), { opacity: 0, duration: .3 });
+  T['1'] = tl;
+})();
+
+/* ---------- 02 results: 별 버스트 + 슬롯 롤 ---------- */
+// 키워드 "45"가 카드 숫자 자리로 날아가 안착 (#fx 레이어는 스케일되지 않으므로 화면 px 기준)
+function heroFly(tl, g, target, at) {
+  const kw = g.kw, em = $('em', kw), o = { p: 0 };
+  let d = null;
+  const calc = () => {
+    const keep = target.textContent; target.textContent = '45';
+    const a = kw.getBoundingClientRect(), b = target.getBoundingClientRect();
+    target.textContent = keep;
+    return { x0: gsap.getProperty(kw, 'x'), y0: gsap.getProperty(kw, 'y'),
+             x: b.left + b.width / 2 - a.left - a.width / 2, y: b.top + b.height / 2 - a.top - a.height / 2,
+             s: parseFloat(getComputedStyle(target).fontSize) * scale / parseFloat(getComputedStyle(kw).fontSize) };
+  };
+  tl.to(o, { p: 1, duration: .7, ease: 'expo.inOut',
+      onStart: () => { gsap.set(kw, { scale: 1 }); d = calc(); },
+      onUpdate: () => { if (d) gsap.set(kw, { x: d.x0 + d.x * o.p, y: d.y0 + d.y * o.p, scale: 1 + (d.s - 1) * o.p }); } }, at)
+    .fromTo(em, { color: C.or }, { color: C.paper, duration: .4, immediateRender: false }, at)
+    .fromTo($('.wm', S(2)), { opacity: 0 }, { opacity: .045, duration: .6 }, at);
+}
+(() => {
+  const s = S(2), g = G[2], tl = mk(), cards = $$('.card', s);
+  const star = (n, r1, r2, u = '') => Array.from({ length: n * 2 }, (_, k) => { const a = -Math.PI / 2 + k * Math.PI / n, r = k % 2 ? r2 : r1;
+    return u ? `${(50 + r * Math.cos(a)).toFixed(2)}% ${(50 + r * Math.sin(a)).toFixed(2)}%` : `${(r * Math.cos(a)).toFixed(2)},${(r * Math.sin(a)).toFixed(2)}`; }).join(u ? ',' : ' ');
+  const sw = document.createElement('div');
+  sw.className = 'stars';
+  sw.innerHTML = '<div class="ryw">' + '<b class="ry"></b>'.repeat(8) + `</div><svg class="bigstar" viewBox="-50 -50 100 100"><polygon points="${star(5, 48, 19)}"/></svg><div class="ring">` +
+    Array.from({ length: 10 }, () => `<i class="st" style="clip-path:polygon(${star(5, 50, 20, '%')})"></i>`).join('') + '</div>';
+  g.grp.insertBefore(sw, g.kw);
+  const rys = $$('.ry', sw), big = $('.bigstar', sw), ring = $('.ring', sw), sts = $$('.st', sw);
+  gsap.set(rys, { rotation: i => i * 45 + 22.5, scaleX: 0 });
+  gsap.set([big, ...sts], { scale: 0 });
+  const R1 = new Map([['pc', roller($('#pc2'), 3, '%')], ['n2', roller($('#n2'), 2)], ['n3', roller($('#n3'), 1)], ['n4', roller($('#n4'), 1)]]);
+
+  tl.set(g.grp, { autoAlpha: 1 }, 0).set(g.fld, { autoAlpha: 1 }, 0)
+    .set(g.kw, { autoAlpha: 1, opacity: 1, x: 0, y: 0, scale: 1 }, 0)
+    .fromTo(g.gd, { opacity: 0 }, { opacity: .15, duration: .25, immediateRender: false }, 0);
+  // r2: 00 → 45 슬롯 롤, 멈추는 순간 별 버스트(큰 별 1 + 작은 별 10 + 방사선 8개 0.4초)
+  const stop = KW[2](tl, g, 0);
+  tl.fromTo(big, { scale: 0, rotation: -60 }, { scale: 1, rotation: 0, duration: .6, ease: 'back.out(1.8)', immediateRender: false }, stop - .1)
+    .fromTo(sts, { x: 0, y: 0, scale: 0 }, { x: i => Math.cos(i * Math.PI / 5) * SH() * .42, y: i => Math.sin(i * Math.PI / 5) * SH() * .42, scale: i => i % 3 ? .7 : 1.1,
+      duration: .55, stagger: .02, ease: 'expo.out', immediateRender: false }, stop - .05)
+    .fromTo(rys, { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: .2, stagger: .01, ease: 'expo.out', immediateRender: false }, stop)
+    .to(rys, { opacity: 0, duration: .2 }, stop + .2);
+  const cut = stop + .55;
+  tl.to(g.gd, { opacity: 0, duration: .2 }, cut - .15)
+    .set(g.fld, { autoAlpha: 0 }, cut)
+    .from($('.hd', s), { opacity: 0, y: 16, duration: .4, ease: 'power3.out' }, cut)
+    // r5: "45"가 카드에 먼저 안착한 뒤 진척률 바가 참
+    .addLabel('hero', cut + .2);
+  heroFly(tl, g, $('#n1'), 'hero');
+  tl.to([big, ...sts], { x: 0, y: 0, scale: 0, duration: .45, ease: 'expo.in' }, 'hero')
+    .set($('#n1'), { textContent: 45 }, 'hero')
+    .from(cards[0], { opacity: 0, duration: .3 }, 'hero+=.4')
+    .from($('.shp', cards[0]), { scale: 0, rotation: 90, duration: .3, ease: 'back.out(2)' }, 'hero+=.5')
+    .to(g.kw, { opacity: 0, duration: .12 }, 'hero+=.65')
+    .set(g.grp, { autoAlpha: 0 }, 'hero+=.8')
+    .addLabel('bar', 'hero+=.9')
+    .fromTo($('.prog .fill', s), { scaleX: 0 }, { scaleX: 1, duration: .9, ease: 'power2.inOut' }, 'bar')
+    .add(R1.get('pc')(100, .9), 'bar')
+    .from($('.prog .ok', s), { opacity: 0, x: -8, duration: .25 }, 'bar+=.9')
+    .from($('.eq', cards[0]), { opacity: 0, duration: .2 });
+  const H = tl.labels.hero;
+  tl.fromTo(ring, { rotation: 0 }, { rotation: 70, duration: H - stop, ease: 'none', immediateRender: false }, stop)
+    .fromTo(big, { rotation: 0 }, { rotation: 36, duration: H - stop - .5, ease: 'none', immediateRender: false }, stop + .5);
+  const cardIn = c => tl.from(c, { opacity: 0, y: 20, duration: .3 }).from($('.shp', c), { scale: 0, rotation: 90, duration: .3, ease: 'back.out(2)' }, '<.1');
+  const sub = c => tl.from($('.sub', c), { opacity: 0, duration: .2 });
+  sub(cards[0]);
+  cardIn(cards[1]); tl.add(R1.get('n2')(20, .5)).to($('#l2a'), swapOut, '+=.1').fromTo($('#l2b'), ...swapIn)
+    .add(R1.get('n2')(60, .6), '<').fromTo($('#n2p'), { opacity: 0 }, { opacity: 1, duration: .15 }); sub(cards[1]);
+  cardIn(cards[2]); tl.add(R1.get('n3')(9, .5)); sub(cards[2]);
+  cardIn(cards[3]); tl.add(R1.get('n4')(7, .5)); sub(cards[3]);
+  cardIn(cards[4]); tl.from($('.txt', cards[4]), { opacity: 0, y: 8, duration: .25 }); sub(cards[4]);
+  cardIn(cards[5]); tl.from($('.txt', cards[5]), { opacity: 0, y: 8, duration: .25 }); sub(cards[5]);
+  T['2'] = tl;
+})();
+
+/* ---------- 03 history: 계획 vs 실제 + 이징 레인 ---------- */
+(() => {
+  const s = S(3), tl = mk(), lanes = $('#lanes');
+  const pos = (el, v) => { const [l, w] = v.split(',').map(Number); el.style.left = l + '%'; el.style.width = w + '%'; };
+  $$('.blk', lanes).forEach(b => pos(b, b.dataset.x));
+  const pl = $$('.blk.pl', lanes), ac = $$('.blk.ac', lanes), ex = $$('.blk.ex', lanes);
+  const toLW = v => { const [l, w] = v.split(',').map(Number); return { left: l + '%', width: w + '%' }; };
+  const shifted = ac.filter(b => b.dataset.t), packed = ac.filter(b => b.dataset.u);
+  // 레인 라벨 옆 이징 커브 아이콘: 계획 linear / 실제 hold 계단 / 추가 bounce
+  const icons = ['M3 21 L21 3', 'M3 21 C6 16 7 13 10 13 L14 13 C17 13 18 6 21 3', 'M3 3 C9 3 11 21 13 21 C14 16 16 16 17 21 C18 18.5 19.5 18.5 21 21'];
+  $$('.lane-l', s).forEach((l, i) => l.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icons[i]}"/></svg>`));
+  const dot = (cls, top, left) => { const d = document.createElement('i'); d.className = 'ldot ' + cls; d.style.top = top + 'px'; d.style.left = left + '%'; lanes.appendChild(d); return d; };
+  const dP = dot('pl', 22, 0), dA = dot('ac', 84, 0), dX = [dot('ex', 172, 20), dot('ex', 172, 46)], dots = [dP, dA, ...dX];
+  gsap.set(dots, { autoAlpha: 0 });
+
+  const cut = intro(tl, 3);
+  hd(tl, s, cut);
+  tl.from($('.months', s), { opacity: 0, duration: .3 })
+    .from($$('.lane-l', s), { opacity: 0, x: -8, duration: .25, stagger: .08 }, '<')
+    .from($('.endm', s), { opacity: 0, duration: .3 }, '<')
+    .addLabel('race', '+=.1')
+    .set([dP, dA], { autoAlpha: 1 }, 'race')
+    // 계획: 직진 / 실제: 컨펌 구간에서 멈췄다가 expo로 따라잡아 동시 도착 / 추가: 위에서 떨어져 bounce 착지
+    .fromTo(dP, { left: '0%' }, { left: '92%', duration: 1.2, ease: 'none', immediateRender: false }, 'race')
+    .fromTo(dA, { left: '0%' }, { left: '14%', duration: .18, ease: 'none', immediateRender: false }, 'race')
+    .to(dA, { left: '92%', duration: .72, ease: 'expo.out' }, 'race+=.48')
+    .fromTo(dX, { y: -150, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: 'bounce.out', stagger: .34, immediateRender: false }, 'race+=.26')
+    .to(dots, { autoAlpha: 0, duration: .25 }, 'race+=1.4')
+    .from(pl, { scaleX: 0, transformOrigin: 'left', duration: .3, stagger: .07, ease: 'power3.out' }, 'race+=1.5')
+    .from(ac, { opacity: 0, y: -20, duration: .3, stagger: .06, ease: 'power3.out' })
+    .add('delay', '+=.2');
+  shifted.forEach(b => tl.to(b, { ...toLW(b.dataset.t), duration: .8, ease: 'expo.inOut' }, 'delay'));
+  tl.from($('.note.d', s), { opacity: 0, y: -6, duration: .25 }, 'delay+=.5')
+    .add('pack', '+=.25');
+  packed.forEach(b => tl.to(b, { ...toLW(b.dataset.u), duration: .7, ease: 'expo.inOut' }, 'pack'));
+  tl.from($('.note.p', s), { opacity: 0, y: -6, duration: .25 }, 'pack+=.4')
+    .from($('.okm', s), { opacity: 0, x: -8, duration: .25 })
+    .from(ex, { y: -120, opacity: 0, duration: .45, stagger: .1, ease: 'power3.in' })
+    .from($$('.hr', s), { opacity: 0, y: 8, duration: .25, stagger: .08 });
+  T['3'] = tl;
+})();
+
+/* ---------- 04 notes: 트루쳇 노이즈 ---------- */
+// 진행값(wave 0~2: 파동 2회, align 0~1: 정렬, ink: 색 모드)으로만 그림 → 스킵해도 같은 프레임
+// r3: 타일 72px(fit 스케일 반영)·선 3px, 낮은 대비 색, 뒤집힘은 타일 중심 기준 0→90° 회전으로
+const tru = (() => {
+  const cv = document.createElement('canvas'), ctx = cv.getContext('2d'), st = { wave: 0, align: 0, ink: 0 };
+  const dur = [1.5, 5], easeR = gsap.parseEase('expo.out'), BASE = ['#3A3632', '#D9C35A'];
+  cv.className = 'cvx';
+  // 호 2개: o=0 → 왼쪽 위·오른쪽 아래 모서리, o=1 → 오른쪽 위·왼쪽 아래 모서리
+  const tile = (P, x, y, t, o) => { const h = t / 2;
+    if (o === 0) { P.moveTo(x + h, y); P.arc(x, y, h, 0, Math.PI / 2); P.moveTo(x + h, y + t); P.arc(x + t, y + t, h, Math.PI, Math.PI * 1.5); }
+    else { P.moveTo(x + t, y + h); P.arc(x + t, y, h, Math.PI / 2, Math.PI); P.moveTo(x, y + h); P.arc(x, y + t, h, Math.PI * 1.5, Math.PI * 2); } };
+  function draw() {
+    const W = SW(), H = SH(), dpr = Math.min(devicePixelRatio || 1, 2);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const t = 72 * scale, h = t / 2, base = new Path2D(), hot = new Path2D(), spin = [];
+    // 회전 구간 폭 = 파동이 0.15초 동안 이동하는 거리(최소 60px). 구간까지 지나가야 패스가 끝나도록 이동 거리에 포함
+    const band = dur.map(d => Math.max(60, (W + 400) / d * .15)), span = band.map(b => W + 400 + b);
+    const fr = p => Math.min(1, Math.max(0, st.wave - p)) * span[p] - 200;
+    const live = st.wave > 0 && st.wave < 2 && st.align < 1, cp = Math.min(1, Math.floor(st.wave)), front = fr(cp);
+    const AB = .25; // 정렬 회전 구간 (정렬 tween .6초 중 .15초)
+    for (let r = 0; r * t < H; r++) for (let c = 0; c * t < W; c++) {
+      const x = c * t, y = r * t, xc = x + h;
+      let o = hash(c, r, 1) < .5 ? 0 : 1, rot = 0;
+      for (let p = 0; p < 2 && !rot; p++) {
+        if (hash(c, r, 2 + p) >= .5) continue;
+        const k = Math.min(1, Math.max(0, (fr(p) - xc) / band[p]));
+        if (k >= 1) o ^= 1; else if (k > 0) rot = easeR(k);
+      }
+      if (!rot && o === 1) {
+        const k = Math.min(1, Math.max(0, (st.align * (1 + AB) - hash(c, r, 9)) / AB));
+        if (k >= 1) o = 0; else if (k > 0) rot = easeR(k);
+      }
+      const isHot = live && Math.abs(xc - front) < 60;
+      if (rot) spin.push([x, y, o, rot, isHot]);
+      else tile(isHot ? hot : base, x, y, t, o);
+    }
+    ctx.lineWidth = 3;
+    const col = BASE[st.ink ? 1 : 0];
+    ctx.strokeStyle = col; ctx.stroke(base);
+    ctx.strokeStyle = C.or; ctx.stroke(hot);
+    // 회전 중인 타일: 이전 방향을 타일 중심 기준으로 0→90° 돌려 그림 (90°에서 새 방향과 같아짐)
+    spin.forEach(([x, y, o, rot, isHot]) => {
+      const P = new Path2D(); tile(P, x, y, t, o);
+      ctx.save(); ctx.translate(x + h, y + h); ctx.rotate(rot * Math.PI / 2); ctx.translate(-x - h, -y - h);
+      ctx.strokeStyle = isHot ? C.or : col; ctx.stroke(P); ctx.restore();
+    });
+  }
+  return { cv, st, draw, dur };
+})();
+(() => {
+  const s = S(4), g = G[4], tl = mk(), cells = $$('.nc', s), nts = $$('.nt', s), sid = $('#sid'), cv = tru.cv, st = tru.st, draw = tru.draw;
+  const ids = ['RP-0101', 'RP-0101-1', 'RP-0103', 'RP-0103-2'];
+  g.grp.insertBefore(cv, g.gd);
+  gsap.set(cv, { opacity: 0 });
+  gsap.set(cells, { x: i => [-30, 26, -22, 32][i], y: i => [-18, 20, 16, -20][i], rotation: i => [-2, 1.6, 1.2, -1.6][i] });
+  gsap.set(nts, { opacity: 0 });
+  const cut = intro(tl, 4, 'keep');
+  tl.fromTo(cv, { opacity: 0 }, { opacity: 1, duration: .2, immediateRender: false }, 0)
+    .fromTo(st, { wave: 0, align: 0, ink: 0 }, { wave: 1, duration: cut, ease: 'none', onUpdate: draw, immediateRender: false }, 0)
+    // 필드 컷 이후: 노랑 테마 위에서 일반 합성, 선 색만 바꿈 (r3)
+    .set(cv, { opacity: .35 }, cut)
+    .fromTo(st, { ink: 0 }, { ink: 1, duration: .01, onUpdate: draw, immediateRender: false }, cut);
+  hd(tl, s, cut);
+  tl.addLabel('cards', cut + .2)
+    .from($$('.nv', s), { opacity: 0, duration: .25, stagger: .05 }, 'cards')
+    .fromTo($('.mob', s), { x: 40 }, { x: 0, duration: .6, ease: 'expo.out' })
+    .fromTo($('.web', s), { x: -40 }, { x: 0, duration: .6, ease: 'expo.out' }, '<')
+    .to(nts[0], { opacity: 1, duration: .3 })
+    .from($$('.tags span', s), { y: -120, opacity: 0, duration: .45, stagger: .09, ease: 'power3.in' })
+    .to(nts[1], { opacity: 1, duration: .3 });
+  ids.slice(1).forEach(id => {
+    const o = { v: 0 };
+    tl.to(sid, swapOut).to(o, { v: 1, duration: .01, onUpdate: () => { sid.textContent = o.v ? id : ids[ids.indexOf(id) - 1]; } }).fromTo(sid, ...swapIn);
+  });
+  tl.to(nts[2], { opacity: 1, duration: .3 })
+    .fromTo($('.spn', s), { rotation: 0 }, { rotation: 720, duration: 1.1, ease: 'power2.out' })
+    .to(nts[3], { opacity: 1, duration: .3 })
+    .addLabel('align')
+    .to(cells, { x: 0, y: 0, rotation: 0, duration: .6, ease: 'expo.inOut' }, 'align')
+    .fromTo(st, { align: 0 }, { align: 1, duration: .6, ease: 'expo.inOut', onUpdate: draw, immediateRender: false }, 'align');
+  const span = tl.labels.align - tl.labels.cards;
+  tru.dur[0] = cut; tru.dur[1] = span;
+  tl.fromTo(st, { wave: 1 }, { wave: 2, duration: span, ease: 'none', onUpdate: draw, immediateRender: false }, 'cards')
+    .fromTo(cv, { opacity: .35 }, { opacity: .06, duration: span + .6, ease: 'power1.out', immediateRender: false }, 'cards');
+  T['4'] = tl;
+})();
+
+/* ---------- 05 issues: 블롭 & 하드컷 ---------- */
+// 점 16개 닫힌 곡선 (Catmull-Rom → 3차 베지어). 점 개수·명령 구조가 같아 attr:{d} tween 가능
+const smooth = pts => {
+  const n = pts.length, f = v => v.toFixed(1), at = k => pts[(k + n) % n];
+  let d = `M${f(pts[0][0])} ${f(pts[0][1])}`;
+  for (let k = 0; k < n; k++) {
+    const p0 = at(k - 1), p1 = at(k), p2 = at(k + 1), p3 = at(k + 2);
+    d += ` C${f(p1[0] + (p2[0] - p0[0]) / 6)} ${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)} ${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])} ${f(p2[1])}`;
+  }
+  return d + 'Z';
+};
+const blob = (cx, cy, r, amp, seed) => smooth(Array.from({ length: 16 }, (_, k) => {
+  const a = Math.PI + k * Math.PI / 8, rr = r * (1 - amp + 2 * amp * hash(k, seed, 7));
+  return [cx + Math.cos(a) * rr, cy + Math.sin(a) * rr];
+}));
+// 반원(위쪽 호 9점 + 바닥 지름 7점), blob과 같은 순서(왼쪽 → 위 → 오른쪽 → 아래)
+const halfDisc = (px, py, r) => smooth(Array.from({ length: 16 }, (_, k) => k <= 8
+  ? [px + Math.cos(Math.PI + k * Math.PI / 8) * r, py + Math.sin(Math.PI + k * Math.PI / 8) * r]
+  : [px + r * (1 - 2 * (k - 8) / 8), py]));
+(() => {
+  const s = S(5), g = G[5], ps = $$('.ip', s);
+  const bs = document.createElementNS(NS, 'svg'), bp = document.createElementNS(NS, 'path');
+  bs.setAttribute('class', 'blob'); bs.setAttribute('viewBox', '-100 -100 200 200');
+  const B = [blob(0, 0, 70, .18, 1), blob(0, 0, 70, .22, 2), blob(0, 0, 70, .2, 3), blob(0, 0, 70, .16, 4)];
+  bp.setAttribute('d', B[0]); bs.appendChild(bp); g.grp.appendChild(bs);
+
+  let tl = mk(), p = ps[0];
+  const e = intro(tl, 5, 'none');
+  // Solve. 퇴장 → 크림 필드로 하드컷, 파란 블롭이 3단계로 숨쉬기 → bl 테마로 컷
+  // r2: 커진 점이 그 자리에서 블롭으로 바뀜
+  tl.set(g.fld, { backgroundColor: C.paper }, e)
+    .set(g.fxd, { autoAlpha: 0 }, e)
+    .set(bs, { autoAlpha: 1 }, e)
+    .fromTo(bs, { scale: 1 }, { scale: .86, duration: .27, ease: 'sine.inOut', immediateRender: false }, e)
+    .to(bs, { scale: 1.04, duration: .26, ease: 'sine.inOut' }, e + .27)
+    .to(bs, { scale: 1, duration: .27, ease: 'sine.inOut' }, e + .53)
+    .fromTo(bp, { attr: { d: B[0] } }, { attr: { d: B[1] }, duration: .27, ease: 'sine.inOut', immediateRender: false }, e)
+    .to(bp, { attr: { d: B[2] }, duration: .26, ease: 'sine.inOut' }, e + .27)
+    .to(bp, { attr: { d: B[3] }, duration: .27, ease: 'sine.inOut' }, e + .53)
+    .set([g.grp, bs], { autoAlpha: 0 }, e + .8)
+    .fromTo($('.wm', s), { opacity: 0 }, { opacity: .045, duration: .6 }, e + .8);
+  hd(tl, s, e + .8);
+  tl.from($('.vb', p), { opacity: 0, y: 20, duration: .4, ease: 'power3.out' }, e + 1)
+    .from($$('path', p), { opacity: 0, duration: .3, stagger: .06 });
+  const base = tl.duration();
+  $$('path', p).forEach((el, i) => tl.to(el, { attr: { d: el.dataset.to }, duration: 1.1, ease: 'expo.inOut' }, base + .2 + i * .1));
+  tl.from([$('h3', p), ...$$('.ir', p)], { opacity: 0, x: 14, duration: .3, stagger: .1 });
+  T['5-0'] = tl;
+
+  // 사례 2~4: 하드컷 + h3 가로 블러 스미어
+  const smear = (tl, p) => { const h3 = $('h3', p); tl.fromTo(h3, { x: 70, opacity: 0 }, { x: 0, opacity: 1, duration: .25, ease: 'expo.out' }, 0); blurTw(tl, h3, 30, 0, .25, 'expo.out', 0); };
+  const rows = p => $$('.ir', p);
+
+  tl = mk(); p = ps[1];
+  const cl = $$('.cl', p);
+  gsap.set($$('.cl b', p), { opacity: 0 });
+  smear(tl, p);
+  tl.fromTo(cl, { top: (i, el) => el.dataset.s * 54 + 6, opacity: 0, x: () => rand(-50, 50) }, { opacity: 1, x: 0, duration: .3, stagger: .05 }, 0)
+    .to($('#o1'), swapOut, '+=.3').fromTo($('#o2'), ...swapIn)
+    .to(cl, { top: i => i * 54 + 6, duration: .8, ease: 'expo.inOut', stagger: .04 }, '<')
+    .to($$('.cl b', p), { opacity: 1, duration: .2, stagger: .06 })
+    .from(rows(p), { opacity: 0, x: 14, duration: .3, stagger: .1 });
+  T['5-1'] = tl;
+
+  tl = mk(); p = ps[2];
+  const ln = $('#errLn');
+  smear(tl, p);
+  tl.from($$('.cln', p), { opacity: 0, x: -8, duration: .2, stagger: .06 }, 0)
+    .fromTo($('.bg.e', ln), { opacity: 0 }, { opacity: 1, duration: .18, repeat: 3, yoyo: true })
+    .set($('.bg.e', ln), { opacity: 1 })
+    .fromTo($('.mk.e', ln), { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: .25 }, '<')
+    .to([$('.bg.e', ln), $('.mk.e', ln)], { opacity: 0, duration: .25 }, '+=.4')
+    .fromTo($('.bg.o', ln), { opacity: 0 }, { opacity: 1, duration: .3 }, '<')
+    .fromTo($('.mk.o', ln), { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: .25 }, '<')
+    .from(rows(p), { opacity: 0, x: 14, duration: .3, stagger: .1 });
+  T['5-2'] = tl;
+
+  tl = mk(); p = ps[3];
+  const c = $('#cmp');
+  gsap.set($('.tt', c), { xPercent: -50 });
+  smear(tl, p);
+  tl.from(c, { opacity: 0, y: 14, duration: .3 }, 0)
+    .fromTo($('.ic.e', c), { scale: 0 }, { scale: 1, duration: .3, ease: 'back.out(3)' })
+    .fromTo(c, { x: -4 }, { x: 4, duration: .06, repeat: 5, yoyo: true })
+    .set(c, { x: 0 })
+    .to($('.ic.e', c), { scale: 0, duration: .2 }, '+=.3')
+    .fromTo(c, { borderColor: C.ink, borderStyle: 'dashed' }, { borderColor: C.or, borderStyle: 'solid', duration: .3 }, '<')
+    .fromTo($('.ic.o', c), { scale: 0 }, { scale: 1, duration: .3, ease: 'back.out(3)' })
+    // r5: 화살표 끝을 기준으로 말풍선이 튀어나옴 (가운데 정렬은 CSS transform 대신 xPercent)
+    .fromTo($('.tt', c), { opacity: 0, y: 8, scale: .85 }, { opacity: 1, y: 0, scale: 1, transformOrigin: '50% 100%', duration: .3, ease: 'back.out(2)' })
+    .from(rows(p), { opacity: 0, x: 14, duration: .3, stagger: .1 });
+  T['5-3'] = tl;
+})();
+
+/* ---------- 06 KPT: 3D 점 구체 ---------- */
+const off = (el, anc) => { let x = 0, y = 0; while (el && el !== anc) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x, y }; };
+function drawLinks() {
+  const b = $('#board'), svg = $('#links'), pn = $$('.p .it', b), tn = $$('.t .it', b);
+  svg.setAttribute('viewBox', `0 0 ${b.clientWidth} ${b.clientHeight}`);
+  // 재측정 시 기존 노드를 갱신 (교체하면 타임라인 tween 대상이 끊김)
+  if (!svg.children.length) svg.innerHTML = pn.map(() => '<path pathLength="1"/><circle r="3.5"/>').join('');
+  const ps = $$('path', svg), cs = $$('circle', svg);
+  pn.forEach((n, k) => {
+    const t = tn[+n.dataset.to], a = off(n, b), c = off(t, b);
+    const x1 = a.x + n.offsetWidth + 4, y1 = a.y + n.offsetHeight / 2, x2 = c.x - 8, y2 = c.y + t.offsetHeight / 2, m = (x1 + x2) / 2;
+    ps[k].setAttribute('d', `M${x1} ${y1} C${m} ${y1}, ${m} ${y2}, ${x2} ${y2}`);
+    cs[k].setAttribute('cx', x2 + 2); cs[k].setAttribute('cy', y2);
+  });
+}
+// 진행값(a 등장, rot 회전, fly 분산)으로만 그림. 독립 rAF 루프 없음
+const sph = (() => {
+  const cv = document.createElement('canvas'), ctx = cv.getContext('2d'), st = { a: 0, rot: 0, fly: 0 }, N = 400, gold = Math.PI * (3 - Math.sqrt(5));
+  cv.className = 'cvx';
+  const P = Array.from({ length: N }, (_, k) => { const y = 1 - (k + .5) * 2 / N, r = Math.sqrt(1 - y * y), th = k * gold;
+    return { x: Math.cos(th) * r, y, z: Math.sin(th) * r, d: hash(k, 1, 1) * .35, jx: (hash(k, 2, 2) - .5) * 60, jy: (hash(k, 3, 3) - .5) * 40 }; });
+  const TILT = .35, ang = r => .4 + r * Math.PI * 1.1, ease = gsap.parseEase('expo.inOut');
+  const proj = (p, a) => { const x1 = p.x * Math.cos(a) + p.z * Math.sin(a), z1 = -p.x * Math.sin(a) + p.z * Math.cos(a);
+    return { x: x1, y: p.y * Math.cos(TILT) - z1 * Math.sin(TILT), z: p.y * Math.sin(TILT) + z1 * Math.cos(TILT) }; };
+  // 회전이 끝난 시점의 화면 x로 세 무리(K/P/T) 분할
+  const grp = P.map(p => { const q = proj(p, ang(1)); return q.x < -1 / 3 ? 0 : q.x > 1 / 3 ? 2 : 1; });
+  let tg = null;
+  const measure = () => {
+    const sr = sheet.getBoundingClientRect();
+    tg = $$('#board .kc').map(kc => { const r = kc.getBoundingClientRect(), b = $('.big b', kc);
+      return { x: r.left - sr.left + (b.offsetLeft + b.offsetWidth / 2) * scale, y: r.top - sr.top + (b.offsetTop + b.offsetHeight / 2) * scale }; });
+  };
+  function draw() {
+    const W = SW(), H = SH(), dpr = Math.min(devicePixelRatio || 1, 2);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    if (st.a <= 0 || st.fly >= 1) return;
+    const R = H * .27 * st.a, cx = W / 2, cy = H / 2, A = ang(st.rot);
+    // r4: 갈라지는 시점부터 0.3초(fly .9초 중 1/3) 동안 무리별로 도착할 헤더 색(K ink / P or / T bl)으로 보간
+    const rgb = s => [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16)), c0 = rgb(C.ink), cu = Math.min(1, st.fly * 3);
+    const fills = [C.ink, C.or, C.bl].map(s => { const c1 = rgb(s); return `rgb(${c0.map((v, i) => Math.round(v + (c1[i] - v) * cu)).join(',')})`; });
+    P.forEach((p, k) => {
+      ctx.fillStyle = fills[grp[k]];
+      const q = proj(p, A), sc = 3 / (3 - q.z);
+      let x = cx + q.x * R * sc, y = cy + q.y * R * sc, al = .2 + .8 * (q.z + 1) / 2, sz = 2.3 * sc;
+      if (st.fly > 0 && tg) {
+        const u = Math.min(1, Math.max(0, (st.fly - p.d) / .65)), e = ease(u), t = tg[grp[k]];
+        x += (t.x + p.jx * (1 - u) - x) * e; y += (t.y + p.jy * (1 - u) - y) * e; al *= 1 - u * u; sz *= 1 - .6 * u;
+      }
+      if (al <= .01) return;
+      ctx.globalAlpha = al; ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+  return { cv, st, draw, measure };
+})();
+(() => {
+  const s = S(6), g = G[6], tl = mk(), st = sph.st, draw = sph.draw;
+  g.grp.insertBefore(sph.cv, g.gd);
+  drawLinks();
+  const cut = intro(tl, 6, 'keep');
+  hd(tl, s, cut);
+  const a0 = cut - .3, fly = a0 + 1.0;
+  tl.fromTo(st, { a: 0, rot: 0, fly: 0 }, { a: 1, duration: .45, ease: 'back.out(1.6)', onUpdate: draw, immediateRender: false }, a0)
+    .fromTo(st, { rot: 0 }, { rot: 1, duration: 1.0, ease: 'none', onUpdate: draw, immediateRender: false }, a0)
+    .fromTo(st, { fly: 0 }, { fly: 1, duration: .9, ease: 'none', onStart: sph.measure, onUpdate: draw, immediateRender: false }, fly)
+    .set(g.grp, { autoAlpha: 0 }, fly + .9)
+    .from($$('.big b', s), { yPercent: 60, opacity: 0, duration: .45, stagger: .08, ease: 'expo.out' }, fly + .5);
+  $$('.kc', s).forEach(c => {
+    tl.from($('.big span', c), { opacity: 0, x: -8, duration: .2 })
+      .from($$('.it', c), { opacity: 0, y: 18, duration: .35, stagger: .1, ease: 'expo.out' });
+  });
+  tl.fromTo('#links path', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .6, stagger: .18, ease: 'power2.inOut' })
+    .fromTo('#links circle', { opacity: 0 }, { opacity: 1, duration: .2, stagger: .18 }, '<.4');
+  T['6'] = tl;
+})();
+
+/* ---------- 07 ending: 오렌지 엔드카드 ---------- */
+(() => {
+  const s = S(7), tl = mk(), burst = $('.burst', s), bs = $$('.b', s);
+  const shuffle = a => a.map(v => [Math.random(), v]).sort((p, q) => p[0] - q[0]).map(v => v[1]);
+  const slots = shuffle([-480, -160, 160, 480].flatMap(x => [-220, 0, 220].map(y => [x, y])));
+  const IN = 1.2, HOLD = 1.8, OUT = .7; // 등장 분산 구간 / 마지막 도착 후 떠 있는 시간 / 수렴 분산 구간
+  const gather = IN + .9 + HOLD;        // 수렴 시작 시점
+  const inAt = shuffle(bs.map((_, i) => i * IN / (bs.length - 1)));
+
+  // 도형별 대기 동작: 도착 후부터 수렴 시작 전까지(dur)만 움직여 수렴 트윈과 충돌하지 않게 함
+  const idle = (b, dur) => ({
+    spin:  () => gsap.to(b, { rotation: '+=360', duration: dur, ease: 'none' }),
+    drift: () => gsap.to(b, { x: '+=' + rand(-60, 60), y: '+=' + rand(-40, 40), duration: dur / 2, yoyo: true, repeat: 1, ease: 'sine.inOut' }),
+    pulse: () => gsap.to(b, { scale: 1.2, duration: dur / 2, yoyo: true, repeat: 1, ease: 'sine.inOut' }),
+    flip:  () => gsap.to(b, { rotationY: 360, duration: dur, ease: 'power3.inOut' })
+  })[b.dataset.m]();
+
+  tl.set(G[7].grp, { autoAlpha: 0 }, 0)
+    .fromTo($('.wm', s), { opacity: 0 }, { opacity: .045, duration: .6 }, 0)
+    .set(burst, { rotation: 0 }, 0);
+
+  bs.forEach((b, i) => {
+    const [sx, sy] = slots[i], x = sx + rand(-50, 50), y = sy + rand(-40, 40);
+    const arrive = inAt[i] + .8;
+    tl.fromTo(b,
+        { x: x * 2.6, y: y * 2.6, rotation: rand(-180, 180), rotationY: 0, scale: .6, autoAlpha: 0, transformPerspective: 600 },
+        { x, y, rotation: rand(-20, 20), scale: 1, autoAlpha: 1, duration: .9, ease: 'expo.out' }, inAt[i])
+      .add(idle(b, gather - arrive), arrive)
+      .to(b, { x: 0, y: 0, scale: .04, duration: .75, ease: 'expo.in' }, gather + rand(0, OUT));
+  });
+
+  // 수렴 지점에서 8갈래 애스터리스크가 회전하며 펼쳐진 뒤 "Published" 앞자리로 이동
+  const ast = $('.ast', s), spokes = $$('b', ast), A = { f: 0 };
+  gsap.set(spokes, { rotation: i => i * 45 });
+  let D = null;
+  const place = () => { if (!D) return; const e = 1 - A.f; gsap.set(ast, { x: D.x * e, y: D.y * e, scale: 1 + .9 * e }); };
+  const measure = () => {
+    gsap.set(ast, { x: 0, y: 0, scale: 1 });
+    const a = ast.getBoundingClientRect(), b = burst.getBoundingClientRect();
+    D = { x: (b.left + b.width / 2 - a.left - a.width / 2) / scale, y: (b.top + b.height / 2 - a.top - a.height / 2) / scale };
+    place();
+  };
+  // 크레딧 줄: 왼쪽부터 무작위 문자 → 실제 문자
+  const cred = $('.cred', s), tn = [];
+  const walk = n => n.childNodes.forEach(c => c.nodeType === 3 ? tn.push(c) : walk(c));
+  walk(cred);
+  const orig = tn.map(n => n.textContent), total = orig.reduce((a, t) => a + [...t].length, 0), CH = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789#/*+', sc = { p: 0 };
+  const scr = () => { let k = 0; const lim = sc.p * total;
+    tn.forEach((n, j) => { n.textContent = [...orig[j]].map(ch => (k++ < lim || ch === ' ') ? ch : CH[Math.random() * CH.length | 0]).join(''); }); };
+
+  tl.to(burst, { rotation: 240, duration: OUT + .75, ease: 'power2.in' }, gather)
+    .set(bs, { autoAlpha: 0 })
+    .call(measure)
+    .fromTo(spokes, { scaleY: 0 }, { scaleY: 1, duration: .4, stagger: .03, ease: 'back.out(2)' })
+    .fromTo(ast, { rotation: -180 }, { rotation: 0, duration: 1.1, ease: 'expo.out' }, '<')
+    .fromTo(A, { f: 0 }, { f: 1, duration: .65, ease: 'expo.inOut', onUpdate: place }, '-=.35')
+    .from($$('.w > span', s), { yPercent: 110, duration: .55, stagger: .12, ease: 'expo.out' }, '-=.2')
+    .fromTo(cred, { autoAlpha: 0 }, { autoAlpha: 1, duration: .15 })
+    .fromTo(sc, { p: 0 }, { p: 1, duration: .6, ease: 'none', onUpdate: scr }, '<')
+    .from([$('p', s), $('#restart')], { opacity: 0, y: 10, duration: .3, stagger: .1 });
+  T['7'] = tl;
+})();
+
+/* ---------- navigation ---------- */
+// 도착 섹션별 전환 방향 (고정). carry: 이전 섹션 형태가 커져 다음 섹션 필드가 됨 (직전 섹션에서 올 때만, 아니면 dot)
+const FX = ['up', 'carry', 'carry', 'right', 'up', 'carry', 'down', 'carry'];
+const CARRY = { 1: () => $('.comp i', S(0)), 2: () => $$('#mg i', S(1))[25], 5: () => $('.spn', S(4)), 7: () => $$('#links circle', S(6)).pop() };
+const clips = (t, cx, cy, R) => ({
+  dot:   [`circle(0px at ${cx}px ${cy}px)`, `circle(${R}px at ${cx}px ${cy}px)`],
+  down:  ['inset(0% 0% 100% 0%)', 'inset(0% 0% 0% 0%)'],
+  up:    ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
+  right: ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)'],
+  diag:  ['polygon(0% 100%, 0% 100%, 0% 100%)', 'polygon(0% 100%, 0% -100%, 200% 100%)']
+})[t];
+const N = secs.length, tocl = $('#tocl'), dot = $('#dot'), stage = $('#stage');
+const nextBtn = $('#next'), nextL = $('#nextL'), nextT = $('#nextT'), skip = $('#skip'), pg = $('#pg'), tc = $('#tc');
+const ips = $$('.ip', S(5)), stepEls = $$('#steps i'), titles = secs.map(s => s.dataset.name);
+let cur = 0, sub = 0, locked = false, moving = false, active = null, tocShown = false, lastStep = -1;
+// 스테이지 높이가 설계 높이보다 작으면 통째로 축소 (1280×720 등)
+const DH = 720;
+function fit() {
+  stage.removeAttribute('style');
+  const r = stage.getBoundingClientRect();
+  scale = Math.min(1, r.height / DH);
+  if (scale < 1) Object.assign(stage.style, { bottom: 'auto', right: 'auto', height: DH + 'px', width: r.width / scale + 'px', transformOrigin: '0 0', transform: `scale(${scale})` });
+  sizeKW(); drawLinks(); tru.draw(); sph.draw();
+}
+const played = new Set();
+const key = () => cur === 5 ? '5-' + sub : String(cur);
+const secDone = i => i === 5 ? played.has('5-3') : played.has(String(i));
+const avail = i => i === 0 || secDone(i - 1);
+
+// G1 타임코드: 재생 중인 T[k]의 time()을 표시만 함 (24fps, mm:ss:ff)
+let tcKey = null, tcLast = -1;
+const p2 = n => String(n).padStart(2, '0');
+gsap.ticker.add(() => {
+  if (!tcKey) return;
+  const f = Math.floor(T[tcKey].time() * 24 + 1e-6);
+  if (f === tcLast) return;
+  tcLast = f;
+  tc.textContent = `${p2(Math.floor(f / 1440))}:${p2(Math.floor(f / 24) % 60)}:${p2(f % 24)}`;
+});
+
+secs.forEach((s, i) => {
+  const li = document.createElement('li');
+  li.innerHTML = `<button type="button"><span class="n">${i === N - 1 ? 'END' : String(i).padStart(2, '0')}</span><span>${secs[i].dataset.short || titles[i]}</span><span class="ar">←</span></button>`;
+  li.querySelector('button').addEventListener('click', () => go(i));
+  tocl.appendChild(li);
+});
+const tocItems = $$('li', tocl);
+
+// 점 이동: 진행 방향 끝이 먼저 늘어나고 뒤 끝이 따라붙는 스프링
+const DOT = 13, dp = { t: 0, b: DOT };
+const renderDot = () => { dot.style.transform = `translateY(${dp.t}px)`; dot.style.height = (dp.b - dp.t) + 'px'; };
+function moveDot(i, inst) {
+  const li = tocItems[i], y = li.offsetTop + li.offsetHeight / 2 - DOT / 2;
+  gsap.killTweensOf(dp);
+  if (inst || RM) { dp.t = y; dp.b = y + DOT; renderDot(); return; }
+  const down = y > dp.t;
+  gsap.to(dp, { [down ? 'b' : 't']: down ? y + DOT : y, duration: .35, ease: 'expo.out', onUpdate: renderDot });
+  gsap.to(dp, { [down ? 't' : 'b']: down ? y : y + DOT, duration: .65, ease: 'expo.inOut', onUpdate: renderDot });
+}
+function ui() {
+  tocItems.forEach((li, i) => {
+    li.classList.toggle('lock', !avail(i));
+    li.classList.toggle('cur', i === cur);
+    li.classList.toggle('nx', avail(i) && !secDone(i) && i !== cur);
+    li.querySelector('button').setAttribute('aria-disabled', String(!avail(i)));
+  });
+  pg.textContent = 'SC ' + p2(cur) + ' / ' + p2(N - 1);
+  stepEls.forEach((e, k) => { e.className = k === sub ? 'cur' : (played.has('5-' + k) ? 'on' : ''); });
+  // 05 진행 칸: 현재 칸이 반원으로 뒤집히는 플립
+  if (cur !== 5) lastStep = -1;
+  else if (sub !== lastStep) { lastStep = sub; if (!RM) gsap.fromTo(stepEls[sub], { rotationX: -180 }, { rotationX: 0, transformPerspective: 60, duration: .5, ease: 'back.out(2)' }); }
+}
+function setNext(v) {
+  if (cur === N - 1) v = false;
+  if (v) {
+    if (cur === 5 && sub < 3) { nextL.textContent = 'NEXT CASE'; nextT.textContent = `사례 ${sub + 2} / 4`; }
+    else { nextL.textContent = 'NEXT'; nextT.textContent = `${String(cur + 1).padStart(2, '0')} ${titles[cur + 1]}`; }
+  }
+  gsap.to(nextBtn, { autoAlpha: v ? 1 : 0, y: v ? 0 : 8, duration: RM ? 0 : (v ? .35 : .15) });
+}
+// 사례 전환은 하드컷 (페이드 없음)
+const showPanel = i => ips.forEach((p, k) => p.classList.toggle('on', k === i));
+function revealToc() {
+  tocShown = true;
+  gsap.set('#toc', { autoAlpha: 1 });
+  moveDot(0, true);
+  if (RM) return;
+  gsap.from('#toc .tt', { opacity: 0, duration: .3 });
+  gsap.from('#toc .rail', { scaleY: 0, transformOrigin: 'top', duration: .6, ease: 'expo.out' });
+  gsap.from(tocItems, { opacity: 0, x: 24, duration: .45, stagger: .07, ease: 'expo.out', delay: .15 });
+  gsap.from(dot, { scale: 0, duration: .4, delay: .5, ease: 'back.out(3)' });
+}
+function markDone(k) {
+  played.add(k);
+  if (k === '0' && !tocShown) revealToc();
+  ui(); setNext(true);
+}
+function finish() {
+  if (!active || active.fin) return;
+  active.fin = true; const k = active.k; active = null;
+  locked = false; skip.classList.remove('on');
+  S(cur).classList.add('idle');
+  markDone(k);
+}
+function enter() {
+  ui();
+  const k = key(), tl = T[k], again = k === '0' && played.has('0');
+  tcKey = k; tcLast = -1;
+  if (RM) { tl.progress(1); markDone(k); return; }
+  locked = true; setNext(false); skip.classList.add('on');
+  active = { k, fin: false };
+  tl.pause();
+  tl.time(again ? tl.labels.afterLoad : 0, false);
+  // 재방문 시 프리롤 건너뜀: 들어올 때 띄운 필드를 바로 컷
+  if (again) gsap.set(G[0].grp, { autoAlpha: 0 });
+  tl.eventCallback('onComplete', finish);
+  tl.play();
+}
+// 퇴장 대상: carry 원본은 남기고, 원본을 품은 상위 요소는 그 자식 단위로 내려가서 고름
+const exitTargets = (root, src) => [...root.children].flatMap(e =>
+  e.matches('.wm') || e === src ? [] : (src && e.contains(src)) ? exitTargets(e, src) : [e]);
+
+function carry(src, color, cb) {
+  const a = src.getBoundingClientRect(), b = sheet.getBoundingClientRect(), cs = getComputedStyle(src);
+  const svg = src instanceof SVGElement, bg = cs.backgroundColor;
+  const from = svg ? cs.fill : (bg !== 'rgba(0, 0, 0, 0)' ? bg : cs.color);
+  const r0 = svg || cs.borderRadius === '50%' ? Math.min(a.width, a.height) / 2 : parseFloat(cs.borderRadius) || 0;
+  const el = document.createElement('div');
+  Object.assign(el.style, { position: 'fixed', zIndex: 50, pointerEvents: 'none', left: a.left + 'px', top: a.top + 'px',
+    width: a.width + 'px', height: a.height + 'px', background: from, borderRadius: r0 + 'px' });
+  document.body.appendChild(el);
+  gsap.timeline()
+    .to(src, { scale: 1.3, transformOrigin: '50% 50%', duration: .15, ease: 'power2.out' })
+    .to(el, { left: b.left, top: b.top, width: b.width, height: b.height, borderRadius: 0, backgroundColor: color, duration: .75, ease: 'expo.inOut' })
+    .add(() => { gsap.set(src, { clearProps: 'scale,transformOrigin' }); cb(); })
+    .to(el, { opacity: 0, duration: .25 }).add(() => el.remove());
+}
+// 04 → 05: 회전 반원이 파란 블롭으로 모핑되면서 커져 필드가 됨
+function blobCarry(src, color, cb) {
+  const a = src.getBoundingClientRect(), b = sheet.getBoundingClientRect();
+  const svg = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+  Object.assign(svg.style, { position: 'fixed', left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px', zIndex: 50, pointerEvents: 'none', overflow: 'hidden' });
+  p.style.fill = getComputedStyle(src).backgroundColor;
+  const px = a.left + a.width / 2 - b.left, py = a.bottom - b.top, r = a.width / 2, R = Math.hypot(b.width, b.height) / 2;
+  p.setAttribute('d', halfDisc(px, py, r));
+  svg.appendChild(p); document.body.appendChild(svg);
+  gsap.timeline()
+    .to(p, { attr: { d: blob(px, py - r * .4, r * 1.7, .25, 5) }, duration: .3, ease: 'back.out(2)' })
+    .to(p, { attr: { d: blob(b.width / 2, b.height / 2, R * 1.45, .14, 6) }, fill: color, duration: .7, ease: 'expo.inOut' })
+    .add(cb)
+    .to(svg, { opacity: 0, duration: .25 }).add(() => svg.remove());
+}
+// 섹션 교체: 필드가 시트를 덮은 상태에서 실행
+function swap(i, old, nw, done) {
+  nw.classList.add('on'); old.classList.remove('on');
+  if (done) done();
+  sheet.dataset.t = nw.dataset.t || '';
+  G.forEach((g, k) => { if (k !== i) gsap.set(g.grp, { autoAlpha: 0 }); });
+  moving = false; enter();
+}
+
+function go(i) {
+  if (i < 0 || i >= N || moving || locked || i === cur || !avail(i)) return;
+  moving = true; setNext(false); moveDot(i);
+  const prev = cur, old = S(prev), nw = S(i);
+  cur = i; sub = 0;
+  if (i === 5) showPanel(0);
+  old.classList.remove('idle');
+  if (RM) { swap(i, old, nw); return; }
+
+  // 퇴장: 현재 섹션 내용이 가속하며 위로 빠져나감. 원복은 필드가 완전히 덮은 뒤
+  const src = FX[i] === 'carry' && prev === i - 1 ? CARRY[i]() : null;
+  const outs = exitTargets(old, src);
+  const exitTw = gsap.to(outs, { y: -60, opacity: 0, duration: .35, stagger: { amount: .15 }, ease: 'expo.in' });
+  const done = () => { exitTw.kill(); gsap.set(outs, { clearProps: 'y,opacity' }); };
+
+  if (src) { (i === 5 ? blobCarry : carry)(src, C[FC[i]], () => { showField(i); swap(i, old, nw, done); }); return; }
+
+  // 기본: 도착 섹션의 필드가 기존 와이프 모양으로 시트를 덮음
+  const g = G[i], sr = sheet.getBoundingClientRect(), d = tocItems[i].getBoundingClientRect();
+  const cx = $('#toc').getBoundingClientRect().left - sr.left, cy = d.top + d.height / 2 - sr.top;
+  const R = Math.hypot(Math.max(cx, sr.width - cx), Math.max(cy, sr.height - cy)) + 40;
+  const [from, to] = clips(FX[i] === 'carry' ? 'dot' : FX[i], cx, cy, R);
+  showField(i);
+  gsap.set(g.grp, { zIndex: 2 });
+  gsap.fromTo(g.grp, { clipPath: from }, { clipPath: to, duration: .75, ease: 'expo.inOut', delay: .2,
+    onComplete: () => { gsap.set(g.grp, { clearProps: 'clipPath,zIndex' }); swap(i, old, nw, done); } });
+}
+function next() {
+  if (locked || moving) return;
+  if (cur === 5 && sub < 3) { sub++; showPanel(sub); enter(); return; }
+  go(cur + 1);
+}
+
+nextBtn.addEventListener('click', next);
+$('#restart').addEventListener('click', () => go(0));
+document.addEventListener('click', e => {
+  if (locked && active && !e.target.closest('button')) { T[active.k].progress(1); finish(); }
+});
+addEventListener('wheel', e => e.preventDefault(), { passive: false });
+addEventListener('keydown', e => { if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End'].includes(e.key) || (e.key === ' ' && e.target.tagName !== 'BUTTON')) e.preventDefault(); });
+addEventListener('resize', () => { fit(); moveDot(cur, true); });
+
+S(0).classList.add('on');
+if (!RM) gsap.set(G[0].grp, { autoAlpha: 1 }), gsap.set(G[0].fld, { backgroundColor: C.ink });
+setNext(false);
+const fontsReady = document.fonts ? Promise.all([document.fonts.ready, document.fonts.load('italic 40px "Instrument Serif"'), document.fonts.load('900 40px Archivo')]).catch(() => {}) : Promise.resolve();
+fontsReady.then(() => { fit(); enter(); });
+})();
+</script>
+</body>
+</html>
